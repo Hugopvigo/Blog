@@ -53,6 +53,7 @@ export function getPageMeta({
   title: pageTitle,
   description,
   baseUrl,
+  pagePath,
   ogImageAbsoluteUrl,
   ogImageAltText,
   ogImageWidth,
@@ -63,6 +64,7 @@ export function getPageMeta({
   title: string;
   description: string;
   baseUrl?: string;
+  pagePath?: string;
   ogImageAbsoluteUrl?: string; // should always be absolute
   ogImageAltText?: string;
   ogImageWidth?: number;
@@ -77,11 +79,10 @@ export function getPageMeta({
     ogImageAltText = !ogImageAltText
       ? `Preview image for ${pageTitle}`
       : ogImageAltText;
-    // ogImageWidth = !ogImageWidth ? 1200 : ogImageWidth;
-    // ogImageHeight = !ogImageHeight ? 627 : ogImageHeight;
   }
 
-  const meta: PageMeta = { title: pageTitle, description: description };
+  const canonicalUrl = pagePath && baseUrl ? new URL(pagePath, baseUrl).toString() : undefined;
+  const meta: PageMeta = { title: pageTitle, description: description, canonicalUrl };
 
   const og: PageOgMeta = {
     title: pageTitle,

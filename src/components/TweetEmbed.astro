@@ -1,22 +1,31 @@
 ---
 type Props = {
   url: string;
+  theme?: "light" | "dark";
+  lang?: string;
 };
 
-const { url } = Astro.props;
+const { url, theme, lang } = Astro.props;
+const dataTheme = theme || "light";
+const dataLang = lang || "es";
 ---
-
 <div class="relative not-prose flex flex-col items-center justify-center">
   <blockquote
     class="twitter-tweet"
     data-conversation="none"
-    data-theme="light"
-    data-lang="en"
+    data-theme={dataTheme}
+    data-lang={dataLang}
     data-dnt="true"
   >
     <a class="unset absolute left-0 top-0" href={url}>Loading embedded tweet...</a>
   </blockquote>
 </div>
+<script>
+  const isDark = document.documentElement.classList.contains("dark");
+  document.querySelectorAll("blockquote.twitter-tweet[data-theme='light']").forEach((el) => {
+    if (isDark) el.setAttribute("data-theme", "dark");
+  });
+</script>
 <script
   async
   defer

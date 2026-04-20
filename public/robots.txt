@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hugopvigo.es/sitemap-index.xml

@@ -3,7 +3,7 @@ import HeaderLink from "./HeaderLink.astro";
 ---
 
 <Fragment>
-  <nav class="hidden md:inline">
+  <nav class="hidden md:inline" aria-label="Navegación principal">
     <section class="text-text-bold">
       <ul class="unset flex gap-4 [&>li]:p-0">
         <li><HeaderLink href="/">Home</HeaderLink></li>
@@ -12,7 +12,7 @@ import HeaderLink from "./HeaderLink.astro";
       </ul>
     </section>
   </nav>
-  <nav class="md:hidden">
+  <nav class="md:hidden" aria-label="Menú móvil">
     <button id="mobile-menu-open">
       <i class="fa-solid fa-bars" aria-hidden="true" title="Open mobile menu"
       ></i>
@@ -49,12 +49,23 @@ import HeaderLink from "./HeaderLink.astro";
     document.body.style.overflow = "hidden";
   });
 
-  document.querySelector("#mobile-menu-close").addEventListener("click", () => {
+document.querySelector("#mobile-menu-close").addEventListener("click", () => {
+  const menuElem = document.querySelector("#mobile-menu");
+  menuElem.classList.remove("show-menu");
+  menuElem.classList.add("hide-menu");
+  document.body.style.overflow = "auto";
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
     const menuElem = document.querySelector("#mobile-menu");
-    menuElem.classList.remove("show-menu");
-    menuElem.classList.add("hide-menu");
-    document.body.style.overflow = "auto";
-  });
+    if (menuElem?.classList.contains("show-menu")) {
+      menuElem.classList.remove("show-menu");
+      menuElem.classList.add("hide-menu");
+      document.body.style.overflow = "auto";
+    }
+  }
+});
 </script>
 
 <style>

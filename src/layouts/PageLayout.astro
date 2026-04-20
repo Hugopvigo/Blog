@@ -15,10 +15,11 @@ import ThemeScript from "./ThemeScript.astro";
 import Favicon from "./Favicon.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import { SITE_LANG } from "../config";
 ---
 
 <!DOCTYPE html>
-<html class="theme-bubblegum" lang="en">
+<html class="theme-bubblegum" lang={SITE_LANG}>
   <head>
     <!-- Global Metadata -->
     <meta charset="utf-8" />

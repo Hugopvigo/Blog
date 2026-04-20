@@ -12,7 +12,8 @@ const { url, label } = Astro.props;
     class="aspect-video w-full"
     src={url}
     title={label}
-    frame-border="0"
+    frameborder="0"
+    sandbox="allow-scripts allow-same-origin allow-presentation"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
     allowfullscreen
   >
