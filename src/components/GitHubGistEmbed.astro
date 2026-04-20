@@ -1,0 +1,42 @@
+---
+type Props = {
+  id: string;
+};
+
+const { id } = Astro.props;
+const sanitizedId = id.replace(/[^a-zA-Z0-9\-]/g, "");
+---
+
+<iframe
+  class="gist-iframe"
+  width="100%"
+  style="border:0;"
+  id={`gist-${sanitizedId}`}
+  data-id={sanitizedId}
+  sandbox="allow-scripts allow-same-origin"
+></iframe>
+<script>
+  // @ts-nocheck
+  window.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(`.gist-iframe`).forEach((iframe) => {
+      const id = iframe.dataset.id;
+      let doc = iframe.document;
+      if (iframe.contentDocument) {
+        doc = iframe.contentDocument;
+      } else if (iframe.contentWindow) {
+        doc = iframe.contentWindow.document;
+      }
+
+      const gistLink = `https://gist.github.com/${id}.js`;
+      const gistScript = `<script type="text/javascript" src="${gistLink}"><\/script>`;
+      const styles = "<style>*{font-size:12px;}</style>";
+      const elementId = `gist-${id}`;
+      const resizeScript = `onload="parent.document.getElementById('${elementId}').style.height=document.body.scrollHeight + 'px'"`;
+      const iframeHtml = `<html><head><base target="_blank" rel="noopener noreferrer">${styles}</head><body ${resizeScript}>${gistScript}</body></html>`;
+
+      doc.open();
+      doc.writeln(iframeHtml);
+      doc.close();
+    });
+  });
+</script>

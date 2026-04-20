@@ -1,0 +1,25 @@
+---
+import { Picture } from 'astro:assets';
+import debianImage from '../assets/images/debian_2025.jpeg';
+---
+
+<div>
+  <p>Aqui algunas cosas sobre mi:</p>
+  <ul class="mt-5">
+    <li>
+      <strong>Linux.</strong> Uso GNU/Linux como sistema operativo. Antes Ubuntu, cada dia mas <a href="https://www.debian.org/index.es.html" target="_blank" rel="noopener noreferrer">Debian</a>. Cosas de la edad y los <a href="https://snapcraft.io/docs/installing-snap-on-ubuntu" target="_blank" rel="noopener noreferrer">Snap</a>.
+    </li>
+    <li>
+      <strong>Android.</strong> Mi sistema operativo favorito. Aqui no hay mucho mas que decir.
+    </li>
+    <li>
+      <strong>Mi laptop.</strong> Uno de mis portatiles de batalla (si, en plural):
+      <Picture src={debianImage} alt="Lenovo V14 con Debian" formats={["avif", "webp"]} />
+    </li>
+    <li>
+      <span><strong>Extended markdown</strong> with <a href="https://markdoc.dev" target="_blank" rel="noopener noreferrer">Markdoc</a>.</span>
+      <span> El Extended Markdown es una extension del lenguaje de marcado Markdown que agrega funcionalidades adicionales como componentes personalizados.</span>
+    </li>
+  </ul>
+  Y hasta aqui por hoy, que no se que poner y simplemente estaba rellenando la pagina para que quedase mas bonita.
+</div>

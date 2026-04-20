@@ -1,0 +1,28 @@
+---
+import PageLayout from "./PageLayout.astro";
+import { SITE_LANG, formatDate } from "../config";
+
+export interface Props {
+  title: string;
+  date: Date;
+}
+
+const { title, date } = Astro.props;
+const formattedDate = formatDate(date);
+---
+
+<PageLayout>
+  <slot name="meta" />
+  <section slot="main" class="blog-post prose max-w-none prose-bubblegum">
+    <h1 class="m-0 mb-[0.25em]">
+      <span class="
+        pl-6 relative block leading-[150%]
+        after:absolute after:content-[''] after:w-2 after:h-full after:top-0 after:left-0 after:bg-primary-green
+      ">
+        {title}
+      </span>
+    </h1>
+    <time class="block mb-[2em] text-text-muted">{formattedDate}</time>
+    <slot name="content" />
+  </section>
+</PageLayout>

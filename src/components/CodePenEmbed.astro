@@ -1,0 +1,28 @@
+---
+type Props = {
+  url: string;
+  title: string;
+  height?: number;
+  defaultTab?: string;
+};
+
+const { url, title, height = 300, defaultTab = "html,result" } = Astro.props;
+
+const codepenUrl = new URL(url);
+const pathParts = codepenUrl.pathname.split("/").filter(Boolean);
+const user = pathParts[0] || "";
+const slugHash = pathParts[1] || "";
+---
+
+<p
+  class="codepen"
+  data-height={height}
+  data-default-tab={defaultTab}
+  data-slug-hash={slugHash}
+  data-user={user}
+  style="height: 300px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;"
+>
+  <span><a href={url}>{title}</a></span>
+</p>
+<script async defer src="https://cpwebassets.codepen.io/assets/embed/ei.js"
+></script>
