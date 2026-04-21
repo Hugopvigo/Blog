@@ -5,21 +5,23 @@ This is not a layout but just a component that's used in layouts.
 ---
 
 <script is:inline>
-(function () {
-  if (typeof window !== "undefined") {
-    const isSystemColorSchemeDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const storageTheme = localStorage.getItem("theme");
-    if (!storageTheme && isSystemColorSchemeDark) {
-      document.documentElement.classList.add("dark");
-      document.head.children.namedItem("theme-color").content = "#0f172a";
-    } else if (storageTheme === "dark") {
-      document.documentElement.classList.add("dark");
-      document.head.children.namedItem("theme-color").content = "#0f172a";
-    } else {
-      document.head.children.namedItem("theme-color").content = "#ffffff";
-    }
+function applyTheme() {
+  if (typeof window === "undefined") return;
+  var isSystemColorSchemeDark = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+  var storageTheme = localStorage.getItem("theme");
+  var themeColorMeta = document.head.children.namedItem("theme-color");
+  if (!storageTheme && isSystemColorSchemeDark) {
+    document.documentElement.classList.add("dark");
+    if (themeColorMeta) themeColorMeta.content = "#0f172a";
+  } else if (storageTheme === "dark") {
+    document.documentElement.classList.add("dark");
+    if (themeColorMeta) themeColorMeta.content = "#0f172a";
+  } else {
+    if (themeColorMeta) themeColorMeta.content = "#ffffff";
   }
-})();
+}
+applyTheme();
+document.addEventListener("astro:after-swap", applyTheme);
 </script>

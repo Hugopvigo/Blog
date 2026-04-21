@@ -40,33 +40,53 @@ import HeaderLink from "./HeaderLink.astro";
   </nav>
 </Fragment>
 
-<script>
-  // @ts-nocheck
-  document.querySelector("#mobile-menu-open").addEventListener("click", () => {
-    const menuElem = document.querySelector("#mobile-menu");
-    menuElem.classList.remove("hide-menu");
-    menuElem.classList.add("show-menu");
-    document.body.style.overflow = "hidden";
-  });
+  <script>
+    function initMobileMenu() {
+      const openBtn = document.querySelector("#mobile-menu-open");
+      const closeBtn = document.querySelector("#mobile-menu-close");
+      const menuElem = document.querySelector("#mobile-menu");
 
-document.querySelector("#mobile-menu-close").addEventListener("click", () => {
-  const menuElem = document.querySelector("#mobile-menu");
-  menuElem.classList.remove("show-menu");
-  menuElem.classList.add("hide-menu");
-  document.body.style.overflow = "auto";
-});
+      if (!openBtn || !closeBtn || !menuElem) return;
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    const menuElem = document.querySelector("#mobile-menu");
-    if (menuElem?.classList.contains("show-menu")) {
-      menuElem.classList.remove("show-menu");
-      menuElem.classList.add("hide-menu");
-      document.body.style.overflow = "auto";
+      openBtn.addEventListener("click", () => {
+        menuElem.classList.remove("hide-menu");
+        menuElem.classList.add("show-menu");
+        document.body.style.overflow = "hidden";
+      });
+
+      closeBtn.addEventListener("click", () => {
+        menuElem.classList.remove("show-menu");
+        menuElem.classList.add("hide-menu");
+        document.body.style.overflow = "";
+      });
+
+      const escHandler = (e: KeyboardEvent) => {
+        if (e.key === "Escape" && menuElem.classList.contains("show-menu")) {
+          menuElem.classList.remove("show-menu");
+          menuElem.classList.add("hide-menu");
+          document.body.style.overflow = "";
+        }
+      };
+      document.addEventListener("keydown", escHandler);
+
+      const links = menuElem.querySelectorAll("a");
+      links.forEach((link) => {
+        link.addEventListener("click", () => {
+          menuElem.classList.remove("show-menu");
+          menuElem.classList.add("hide-menu");
+          document.body.style.overflow = "";
+        });
+      });
     }
-  }
-});
-</script>
+
+    initMobileMenu();
+
+    document.addEventListener("astro:after-swap", initMobileMenu);
+
+    document.addEventListener("astro:before-swap", () => {
+      document.body.style.overflow = "";
+    });
+  </script>
 
 <style>
   .hide-menu {
