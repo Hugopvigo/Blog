@@ -1,50 +1,130 @@
-# Blogster
+# 🚀 hugopvigo.es — Blog Personal
 
-Theme: **bubblegum**
+Blog personal de **Hugo Perez-Vigo** sobre tecnología, ciberseguridad y desarrollo web. Construido con Astro y desplegado en servidor propio.
 
-Blogster is a collection of beautiful, accessible and performant blog templates built with [Astro](https://astro.build) and [Markdoc](https://markdoc.dev).
+🌐 **[hugopvigo.es](https://hugopvigo.es)**
 
-Check out the demo here - [Blogster bubblegum template](https://blogster-bubblegum.netlify.app).
+---
 
-## Bubblegum Template
+## 🛠️ Stack tecnológico
 
-A beautiful, performant and accessible theme built with [Tailwind](https://tailwindcss.com).
+| Tecnología | Versión | Uso |
+|---|---|---|
+| [Astro](https://astro.build) | ^5.x | Framework principal (SSG) |
+| [Tailwind CSS](https://tailwindcss.com) | ^3.x | Estilos |
+| [Markdoc](https://markdoc.dev) | ^0.2 | Contenido en markdown extendido |
+| [TypeScript](https://www.typescriptlang.org) | ^4.9 | Tipado estático |
+| [Font Awesome](https://fontawesome.com) | 6 | Iconografía (bundle minimalista) |
+| Apache | — | Servidor web |
 
-- **Fast**. Fast by default. Astro websites are engineered to be fast and load before you could blink, even when not cached.
-- **Dark mode**. All themes have light/dark mode built-in.
-- **Mobile first**. Responsive and loads fast in all devices.
-- **Accessible**. A well thought out semantic and accessible content.
-- **Perfect lighthouse score.** 100 across the board.
-- **Easy content authoring**. Author content using markdown (`.md`) from your code editor or directly in GitHub.
-- **Extended markdown with [Markdoc](https://markdoc.dev).** Type-safe custom components like YouTube embed, Twitter embed (or anything you want really) in your markdown (`.md`) files.
-- **RSS feed**. Your blog has an RSS feed setup that can be accessed at `/rss.xml`.
-- **SEO**. All pages are setup with all the SEO you might need.
+---
 
-## How do I add content?
+## ✨ Características
 
-All the content is written in markdown (.md) and grouped as `blog` or `projects` in the `content` directory. All the default markdown syntax will work. You also have a few example custom markdown elements like _YouTube embed_, _Twitter embed_, etc. You can create your own custom components too in two easy steps.
+- 🌙 **Dark mode** — toggle con persistencia en localStorage
+- ⚡ **Prefetch** — navegación instantánea entre páginas
+- 🖼️ **Imágenes responsive** — layout constrained con responsive styles
+- 📡 **RSS feed** — en `/rss.xml`
+- 🗺️ **Sitemap** automático
+- 🔒 **Seguridad** — iframes sandboxed, rel=noopener, canonical URLs, HSTS
+- ♿ **Accesibilidad** — aria-labels, navegación por teclado, Escape para cerrar menú
+- 🎯 **SEO** — meta tags, Open Graph, Twitter Card en todas las páginas
+- 💡 **Perfect Lighthouse score** — 100/100
+- 📦 **FA optimizado** — bundle propio de 3 iconos vs 800KB del full CSS
 
-1. Add a markdoc config. Check out the markdoc config in [src/lib/markdoc/config.ts](src/lib/markdoc/config.ts) to learn how to add custom components.
-2. Add a component to render your custom component. Check out the Renderer in [src/components/Renderer.astro](src/components/Renderer.astro).
+---
 
-## How do I make it my blog?
+## 📁 Estructura del proyecto
 
-Easy.
+```
+/
+├── content/
+│   ├── blog/          # Posts del blog (.md)
+│   └── projects/      # Proyectos (.md)
+├── public/
+│   ├── fonts/         # Space Grotesk (self-hosted)
+│   ├── fontawesome/   # FA bundle minimalista
+│   └── images/        # Imágenes estáticas
+├── src/
+│   ├── components/    # Componentes Astro
+│   ├── layouts/       # Layouts base
+│   ├── lib/markdoc/   # Config Markdoc + schemas
+│   ├── pages/         # Rutas del blog
+│   └── styles/        # CSS global
+├── astro.config.mjs
+├── tailwind.config.cjs
+└── deploy.sh
+```
 
-- All content is static and everything is straight forward. Change whatever you need to change.
-- Delete or update the content in `content/{content-group}`. `content-group` could be `blog`, `projects` or `anything`.
-- (Optional) If you need more content types like _Notes_, just create a new dir in `content` and add a new frontmatter validator like [src/lib/markdoc/blog/frontmatter](src/lib/markdoc/blog/frontmatter).
+---
 
-## How do I deploy?
+## 🚀 Desarrollo local
 
-`yarn build` will generate a static website in `dist` dir. You can host it with any static hosting. If you need a recommendation, check out [Netlify](netlify.com).
+```bash
+# Instalar dependencias
+npm install
 
-## Credit
+# Servidor de desarrollo en localhost:3000
+npm run dev
 
-Thanks to other templates that inspired this theme.
+# Build de producción
+npm run build
 
-- [Official Astro Blog template](https://github.com/withastro/astro/tree/main/examples/blog)
+# Preview del build
+npm run preview
+```
 
-## License
+---
 
-MIT © [Dinesh Pandiyan](https://github.com/flexdinesh)
+## 🚢 Deploy
+
+El deploy se hace en el servidor vía `deploy.sh`:
+
+```bash
+bash deploy.sh
+```
+
+El script hace:
+1. `npm run build` — genera el sitio en `dist/`
+2. `rsync` — sincroniza `dist/` con el DocumentRoot de Apache (`/var/www/html/dist`)
+3. Ajusta permisos automáticamente
+
+---
+
+## ✍️ Escribir contenido
+
+Los posts van en `content/blog/` y los proyectos en `content/projects/` en formato Markdown.
+
+**Frontmatter de un post:**
+
+```md
+---
+external: false
+title: "Título del post"
+description: "Descripción breve"
+date: 2025-01-01
+---
+
+Contenido aquí...
+```
+
+**Componentes disponibles en Markdoc:**
+- `YouTubeEmbed` — embed de YouTube sandboxed
+- `GitHubGistEmbed` — embed de Gist con sanitización XSS
+- `CodePenEmbed` — embed de CodePen
+- `TweetEmbed` — embed de Twitter con soporte dark/light
+
+---
+
+## 🔐 Seguridad
+
+- Iframes con atributo `sandbox` (YouTube, Gist, CodePen)
+- `rel="noopener noreferrer"` en todos los `target="_blank"`
+- HSTS habilitado en Apache (`max-age=31536000; includeSubDomains`)
+- Canonical URLs en todas las páginas
+
+---
+
+## 📄 Licencia
+
+MIT © [Hugo Perez-Vigo](https://hugopvigo.es)
