@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "astro/zod";
 
 const baseSchema = z.object({
   draft: z.boolean().default(false),
