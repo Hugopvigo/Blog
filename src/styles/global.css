@@ -188,7 +188,7 @@
   }
 }
 
-@layer components {
+@layer utilities {
   .prose-bubblegum {
     --tw-prose-body: var(--color-text-body);
     --tw-prose-headings: var(--color-text-heading);
