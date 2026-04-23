@@ -38,7 +38,7 @@ import { SITE_LANG } from "../config";
     class="max-w-3xl mx-auto min-h-screen px-6 sm:px-8"
   >
     <Header />
-    <main id="main">
+    <main id="main" transition:animate="fade">
       <slot name="main" />
     </main>
     <Footer />
@@ -49,11 +49,13 @@ import { SITE_LANG } from "../config";
           "header"
           "main"
           "footer";
-        grid-template-rows: 5rem minmax(0, 1fr) 5rem;
+        grid-template-rows: auto minmax(0, 1fr) auto;
         grid-template-columns: minmax(0, 1fr);
       }
       main {
         grid-area: main;
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
       }
     </style>
   </body>

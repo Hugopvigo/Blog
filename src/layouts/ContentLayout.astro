@@ -5,16 +5,24 @@ import { SITE_LANG, formatDate } from "../config";
 export interface Props {
   title: string;
   date: Date;
+  slug?: string;
 }
 
-const { title, date } = Astro.props;
+const { title, date, slug } = Astro.props;
 const formattedDate = formatDate(date);
 ---
 
 <PageLayout>
   <slot name="meta" />
   <section slot="main" class="blog-post prose max-w-none prose-bubblegum">
-    <h1 class="m-0 mb-[0.25em]">
+    <a
+      href="/blog"
+      class="unset not-prose flex items-center gap-1.5 text-text-muted text-sm hover:text-text-link transition-colors duration-150 mb-8 w-fit"
+    >
+      <i class="fa-solid fa-arrow-left text-xs"></i>
+      <span>Volver al blog</span>
+    </a>
+    <h1 class="m-0 mb-[0.25em]" transition:name={slug ? `post-title-${slug}` : undefined}>
       <span class="
         pl-6 relative block leading-[150%]
         after:absolute after:content-[''] after:w-2 after:h-full after:top-0 after:left-0 after:bg-primary-green

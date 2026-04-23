@@ -13,27 +13,24 @@ import HeaderLink from "./HeaderLink.astro";
     </section>
   </nav>
   <nav class="md:hidden" aria-label="Menú móvil">
-    <button id="mobile-menu-open">
-      <i class="fa-solid fa-bars" aria-hidden="true" title="Open mobile menu"
-      ></i>
-      <span class="fa-sr-only">Open mobile menu</span>
+    <button id="mobile-menu-open" class="p-2 rounded-md hover:bg-text-muted/10 transition-colors" aria-label="Abrir menú">
+      <i class="fa-solid fa-bars text-lg" aria-hidden="true"></i>
     </button>
     <section
       id="mobile-menu"
-      class="hide-menu fixed top-0 left-0 z-10 w-full h-full transition-transform bg-black/75 border-primary-blue"
+      class="hide-menu fixed top-0 left-0 z-50 w-full h-full transition-transform bg-black/60 backdrop-blur-sm"
     >
-      <div class="bg-bg-body w-[75%] h-full drop-shadow-2xl">
-        <button id="mobile-menu-close" class="px-6 h-[5rem] text-lg xml-[1px]">
-          <i
-            class="fa-solid fa-xmark"
-            aria-hidden="true"
-            title="Close mobile menu"></i>
-          <span class="fa-sr-only">Close mobile menu</span>
-        </button>
-        <ul class="unset flex flex-col text-text-bold gap-4 [&>li]:p-0 px-6">
-          <li><HeaderLink href="/">Home</HeaderLink></li>
-          <li><HeaderLink href="/blog">Blog</HeaderLink></li>
-          <li><HeaderLink href="/projects">Projects</HeaderLink></li>
+      <div class="bg-bg-body w-[80%] max-w-xs h-full drop-shadow-2xl flex flex-col">
+        <div class="flex items-center justify-between px-6 h-[5rem] border-b border-text-muted/10">
+          <span class="font-bold text-text-heading">Menú</span>
+          <button id="mobile-menu-close" class="p-2 rounded-md hover:bg-text-muted/10 transition-colors" aria-label="Cerrar menú">
+            <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+          </button>
+        </div>
+        <ul class="unset flex flex-col gap-1 [&>li]:p-0 p-4 mt-2">
+          <li><HeaderLink href="/" class="block px-4 py-2 rounded-md hover:bg-text-muted/10 transition-colors text-lg font-medium">Home</HeaderLink></li>
+          <li><HeaderLink href="/blog" class="block px-4 py-2 rounded-md hover:bg-text-muted/10 transition-colors text-lg font-medium">Blog</HeaderLink></li>
+          <li><HeaderLink href="/projects" class="block px-4 py-2 rounded-md hover:bg-text-muted/10 transition-colors text-lg font-medium">Projects</HeaderLink></li>
         </ul>
       </div>
     </section>

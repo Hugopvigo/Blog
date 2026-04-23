@@ -21,47 +21,52 @@ const sortedPosts = posts
 
 <PageLayout>
   <PageMeta title={`Blog | ${SITE_TITLE}`} slot="meta" pagePath="/blog" />
-  <section slot="main">
-    <ul>
+  <section slot="main" class="pt-2">
+    <h2 class="font-bold text-text-muted text-xs tracking-[0.2em] uppercase mb-6">
+      Artículos
+    </h2>
+    <ul class="unset">
       {
         sortedPosts.map((post) => {
           const formattedDate = formatDate(post.frontmatter.date);
           return (
-            <li class="grid grid-cols-[1fr] md:grid-cols-[1fr_auto] mb-3 md:gap-2 items-start">
-              <div class="title">
-                {post.frontmatter.external ? (
-                  <a
-                    href={post.frontmatter.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="unset
-                      transition-[background-size] duration-300
-                      bg-gradient-to-r bg-left-bottom bg-no-repeat
-                      bg-[length:0%_55%] hover:bg-[length:100%_55%] dark:bg-[length:0%_2px] hover:dark:bg-[length:100%_2px]
-                      from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
-                    "
-                  >
-                    <span>{post.frontmatter.title}</span>
-                    <span>
-                      <i class="ml-1 mr-1 text-[12px] pb-2 fa-solid fa-up-right-from-square" />
-                    </span>
-                  </a>
-                ) : (
-                  <a
-                    href={`/blog/${post.slug}`}
-                    class="unset
-                      transition-[background-size] duration-300
-                      bg-gradient-to-r bg-left-bottom bg-no-repeat
-                      bg-[length:0%_55%] hover:bg-[length:100%_55%] dark:bg-[length:0%_2px] hover:dark:bg-[length:100%_2px]
-                      from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
-                    "
-                  >
-                    {post.frontmatter.title}
-                  </a>
-                )}
-              </div>
-              <div class="text-text-muted text-sm italic pt-1">
-                <time datetime={post.frontmatter.date.toISOString()}>
+            <li class="[&>*]:p-0 border-b border-text-muted/10 last:border-b-0">
+              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 py-3 sm:py-4 group">
+                <div class="title">
+                  {post.frontmatter.external ? (
+                    <a
+                      href={post.frontmatter.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="unset
+                        transition-[background-size] duration-300
+                        bg-gradient-to-r bg-left-bottom bg-no-repeat
+                        bg-[length:0%_55%] hover:bg-[length:100%_55%] dark:bg-[length:0%_2px] hover:dark:bg-[length:100%_2px]
+                        from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
+                      "
+                    >
+                      <span>{post.frontmatter.title}</span>
+                      <i class="ml-1.5 text-[11px] fa-solid fa-up-right-from-square opacity-60" />
+                    </a>
+                  ) : (
+                    <a
+                      href={`/blog/${post.slug}`}
+                      transition:name={`post-title-${post.slug}`}
+                      class="unset
+                        transition-[background-size] duration-300
+                        bg-gradient-to-r bg-left-bottom bg-no-repeat
+                        bg-[length:0%_55%] hover:bg-[length:100%_55%] dark:bg-[length:0%_2px] hover:dark:bg-[length:100%_2px]
+                        from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
+                      "
+                    >
+                      {post.frontmatter.title}
+                    </a>
+                  )}
+                </div>
+                <time
+                  datetime={post.frontmatter.date.toISOString()}
+                  class="text-text-muted text-sm tabular-nums shrink-0"
+                >
                   {formattedDate}
                 </time>
               </div>

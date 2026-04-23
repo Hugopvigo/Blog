@@ -3,7 +3,7 @@ import Nav from "./Nav.astro";
 import DarkModeToggle from "./DarkModeToggle.astro";
 ---
 
-<header class="">
+<header class="sticky top-0 z-40 backdrop-blur-md bg-bg-body/90 border-b border-text-muted/10">
   <a
     class="unset absolute z-10 left-[50%] -top-[100rem] translate-x-[-50%] bg-white dark:bg-slate-900 text-black dark:text-white px-8 py-2 focus:top-2"
     href="#main"
@@ -11,26 +11,26 @@ import DarkModeToggle from "./DarkModeToggle.astro";
     Skip to content
   </a>
   <Nav />
-  <div
-    class="justify-self-end py-2 flex items-center content-center text-text-bold"
-  >
+  <div class="justify-self-end py-2 flex items-center gap-3 text-text-muted">
     <a
-      class="unset ml-4 rounded-sm transition-[background-size] duration-150 ease-in-out bg-left-bottom bg-[length:0%_55%] hover:bg-[length:100%_55%] bg-no-repeat bg-gradient-to-r from-primary-yellow to-primary-yellow dark:bg-none dark:hover:text-primary-yellow"
+      class="unset hover:text-primary-yellow transition-colors duration-150"
       href="https://github.com/Hugopvigo"
       target="_blank"
       rel="noopener noreferrer"
+      title="Hugo en GitHub"
     >
-      <i class="fa-brands fa-github" aria-hidden="true" title="Hugo en GitHub"></i>
-      <span>GitHub</span>
+      <i class="fa-brands fa-github text-lg" aria-hidden="true"></i>
+      <span class="sr-only">GitHub</span>
     </a>
     <a
-      class="unset ml-4 rounded-sm transition-[background-size] duration-150 bg-left-bottom bg-[length:0%_55%] hover:bg-[length:100%_55%] bg-no-repeat bg-gradient-to-r from-primary-blue to-primary-blue dark:bg-none dark:hover:text-primary-blue"
+      class="unset hover:text-primary-blue transition-colors duration-150"
       href="https://twitter.com/hugopvigo"
       target="_blank"
       rel="noopener noreferrer"
+      title="Hugo en Twitter"
     >
-      <i class="fa-brands fa-twitter" aria-hidden="true" title="Hugo en Twitter"></i>
-      <span>Twitter</span>
+      <i class="fa-brands fa-twitter text-lg" aria-hidden="true"></i>
+      <span class="sr-only">Twitter</span>
     </a>
   </div>
   <DarkModeToggle />
