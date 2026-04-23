@@ -27,3 +27,8 @@ pnpm-debug.log*
 !.yarn/sdks
 !.yarn/versions
 .astro/
+
+# agents
+CLAUDE.md
+AGENT.md
+AGENTS.md
