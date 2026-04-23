@@ -3,23 +3,28 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
+/*
+  @theme inline tells Tailwind v4 to generate utilities that reference these
+  CSS variables at runtime (e.g. bg-bg-body → background-color: var(--color-bg-body)).
+  The actual values come from the theme classes below (.theme-bubblegum / .dark).
+*/
+@theme inline {
   --font-body: "Space Grotesk", sans-serif;
   --font-heading: "Space Grotesk", sans-serif;
-  --color-primary-blue: oklch(var(--color-primary-blue-ch) / <alpha-value>);
-  --color-primary-green: oklch(var(--color-primary-green-ch) / <alpha-value>);
-  --color-primary-yellow: oklch(var(--color-primary-yellow-ch) / <alpha-value>);
-  --color-text-body: oklch(var(--color-text-body-ch) / <alpha-value>);
-  --color-text-heading: oklch(var(--color-text-heading-ch) / <alpha-value>);
-  --color-text-bold: oklch(var(--color-text-bold-ch) / <alpha-value>);
-  --color-text-muted: oklch(var(--color-text-muted-ch) / <alpha-value>);
-  --color-text-link: oklch(var(--color-text-link-ch) / <alpha-value>);
-  --color-text-code: oklch(var(--color-text-code-ch) / <alpha-value>);
-  --color-text-selection: oklch(var(--color-text-selection-ch) / <alpha-value>);
-  --color-bg-body: oklch(var(--color-bg-body-ch) / <alpha-value>);
-  --color-bg-code: oklch(var(--color-bg-code-ch) / <alpha-value>);
-  --color-bg-selection: oklch(var(--color-bg-selection-ch) / <alpha-value>);
-  --color-border-code: oklch(var(--color-border-code-ch) / <alpha-value>);
+  --color-primary-blue: var(--_color-primary-blue);
+  --color-primary-green: var(--_color-primary-green);
+  --color-primary-yellow: var(--_color-primary-yellow);
+  --color-text-body: var(--_color-text-body);
+  --color-text-heading: var(--_color-text-heading);
+  --color-text-bold: var(--_color-text-bold);
+  --color-text-muted: var(--_color-text-muted);
+  --color-text-link: var(--_color-text-link);
+  --color-text-code: var(--_color-text-code);
+  --color-text-selection: var(--_color-text-selection);
+  --color-bg-body: var(--_color-bg-body);
+  --color-bg-code: var(--_color-bg-code);
+  --color-bg-selection: var(--_color-bg-selection);
+  --color-border-code: var(--_color-border-code);
   --color-transparent: transparent;
   --color-current: currentColor;
 }
@@ -27,37 +32,37 @@
 @layer base {
 
   .theme-bubblegum {
-    --color-primary-blue-ch: 82% 0.1 200;
-    --color-primary-green-ch: 93% 0.2 125;
-    --color-primary-yellow-ch: 93% 0.15 95;
-    --color-text-body-ch: 38% 0.08 295;
-    --color-text-heading-ch: 38% 0.08 295;
-    --color-text-bold-ch: 38% 0.08 295;
-    --color-text-muted-ch: 49% 0.02 260;
-    --color-text-link-ch: 71% 0.14 200;
-    --color-text-code-ch: 0% 0 0;
-    --color-text-selection-ch: 0% 0 0;
-    --color-bg-body-ch: 100% 0 0;
-    --color-bg-code-ch: 96% 0.04 85;
-    --color-bg-selection-ch: 95% 0.2 125;
-    --color-border-code-ch: 95% 0.03 60;
+    --_color-primary-blue: oklch(82% 0.1 200);
+    --_color-primary-green: oklch(93% 0.2 125);
+    --_color-primary-yellow: oklch(93% 0.15 95);
+    --_color-text-body: oklch(38% 0.08 295);
+    --_color-text-heading: oklch(38% 0.08 295);
+    --_color-text-bold: oklch(38% 0.08 295);
+    --_color-text-muted: oklch(49% 0.02 260);
+    --_color-text-link: oklch(71% 0.14 200);
+    --_color-text-code: oklch(0% 0 0);
+    --_color-text-selection: oklch(0% 0 0);
+    --_color-bg-body: oklch(100% 0 0);
+    --_color-bg-code: oklch(96% 0.04 85);
+    --_color-bg-selection: oklch(95% 0.2 125);
+    --_color-border-code: oklch(95% 0.03 60);
   }
 
   .theme-bubblegum.dark {
-    --color-primary-blue-ch: 62% 0.19 260;
-    --color-primary-green-ch: 93% 0.2 125;
-    --color-primary-yellow-ch: 93% 0.15 95;
-    --color-text-body-ch: 81% 0.02 260;
-    --color-text-heading-ch: 100% 0 0;
-    --color-text-bold-ch: 100% 0 0;
-    --color-text-muted-ch: 72% 0.02 260;
-    --color-text-link-ch: 74% 0.16 260;
-    --color-text-code-ch: 100% 0 0;
-    --color-text-selection-ch: 0% 0 0;
-    --color-bg-body-ch: 22% 0.04 260;
-    --color-bg-code-ch: 29% 0.04 260;
-    --color-bg-selection-ch: 95% 0.2 125;
-    --color-border-code-ch: 96% 0.04 95;
+    --_color-primary-blue: oklch(62% 0.19 260);
+    --_color-primary-green: oklch(93% 0.2 125);
+    --_color-primary-yellow: oklch(93% 0.15 95);
+    --_color-text-body: oklch(81% 0.02 260);
+    --_color-text-heading: oklch(100% 0 0);
+    --_color-text-bold: oklch(100% 0 0);
+    --_color-text-muted: oklch(72% 0.02 260);
+    --_color-text-link: oklch(74% 0.16 260);
+    --_color-text-code: oklch(100% 0 0);
+    --_color-text-selection: oklch(0% 0 0);
+    --_color-bg-body: oklch(22% 0.04 260);
+    --_color-bg-code: oklch(29% 0.04 260);
+    --_color-bg-selection: oklch(95% 0.2 125);
+    --_color-border-code: oklch(96% 0.04 95);
   }
 
   :root {
@@ -115,8 +120,8 @@
   }
 
   :is(.dark code:not(pre code):not(.unset)) {
-    background-color: oklch(var(--color-bg-code-ch) / 0.15);
-    border-color: oklch(var(--color-border-code-ch) / 0.15);
+    background-color: color-mix(in srgb, var(--_color-bg-code) 15%, transparent);
+    border-color: color-mix(in srgb, var(--_color-border-code) 15%, transparent);
   }
 
   ul:not(.unset):not(:where([class~="prose"] *)) {
@@ -133,7 +138,7 @@
     position: absolute;
     left: 0;
     content: "\00bb";
-    color: oklch(var(--color-text-muted-ch));
+    color: var(--color-text-muted);
   }
 
   ol:not(.unset):not(:where([class~="prose"] *)) {
@@ -141,7 +146,7 @@
   }
 
   ol:not(.unset):not(:where([class~="prose"] *))>li::marker {
-    color: oklch(var(--color-text-muted-ch));
+    color: var(--color-text-muted);
   }
 
   ul:not(.unset):not(:where([class~="prose"] *))>li,

@@ -90,14 +90,9 @@
       }
     }
 
-    customElements.define("mode-toggle", ModeToggle);
-
-    document.addEventListener("astro:after-swap", () => {
-      const el = document.querySelector("mode-toggle");
-      if (el && !(el instanceof ModeToggle)) {
-        ModeToggle.call(el);
-      }
-    });
+    if (!customElements.get("mode-toggle")) {
+      customElements.define("mode-toggle", ModeToggle);
+    }
   </script>
 
 <style>
