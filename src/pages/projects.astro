@@ -1,22 +1,15 @@
 ---
-import { readAll } from "../lib/markdoc/read";
-import { project } from "../lib/markdoc/frontmatter.schema";
+import { getCollection } from "astro:content";
 import PageLayout from "../layouts/PageLayout.astro";
 import PageMeta from "../components/PageMeta.astro";
 import { SITE_TITLE, formatDate } from "../config";
 
-const projects = await readAll({
-  directory: "projects",
-  frontmatterSchema: project,
-});
+const projects = await getCollection("projects", ({ data }) => !data.draft);
 
-const sortedProjects = projects
-  .filter((p) => p.frontmatter.draft !== true)
-  .sort(
-    (a, b) =>
-      new Date(b.frontmatter.date).valueOf() -
-      new Date(a.frontmatter.date).valueOf()
-  );
+const sortedProjects = projects.sort(
+  (a, b) =>
+    new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
+);
 ---
 
 <PageLayout>
@@ -28,13 +21,13 @@ const sortedProjects = projects
     <ul class="unset">
       {
         sortedProjects.map((project) => {
-          const formattedDate = formatDate(project.frontmatter.date);
+          const formattedDate = formatDate(project.data.date);
           return (
             <li class="[&>*]:p-0 border-b border-text-muted/10 last:border-b-0">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 py-3 sm:py-4">
                 <div class="title">
                   <a
-                    href={project.frontmatter.url}
+                    href={project.data.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     class="unset
@@ -44,12 +37,12 @@ const sortedProjects = projects
                       from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
                     "
                   >
-                    <span>{project.frontmatter.title}</span>
+                    <span>{project.data.title}</span>
                     <i class="ml-1.5 text-[11px] fa-solid fa-up-right-from-square opacity-60" />
                   </a>
                 </div>
                 <time
-                  datetime={project.frontmatter.date.toISOString()}
+                  datetime={project.data.date.toISOString()}
                   class="text-text-muted text-sm tabular-nums shrink-0"
                 >
                   {formattedDate}

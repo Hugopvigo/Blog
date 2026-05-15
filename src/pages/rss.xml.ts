@@ -1,50 +1,34 @@
 import rss from "@astrojs/rss";
-import { blog } from "../lib/markdoc/frontmatter.schema";
-import { readAll } from "../lib/markdoc/read";
+import { getCollection } from "astro:content";
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL } from "../config";
 
 export async function GET() {
-  const posts = await readAll({
-    directory: "blog",
-    frontmatterSchema: blog,
-  });
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
 
-  const sortedPosts = posts
-    .filter((p) => p.frontmatter.draft !== true)
-    .sort(
-      (a, b) =>
-        new Date(b.frontmatter.date).valueOf() -
-        new Date(a.frontmatter.date).valueOf()
-    );
+  const sortedPosts = posts.sort(
+    (a, b) =>
+      new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
+  );
 
   let baseUrl = SITE_URL;
-  // removing trailing slash if found
-  // https://example.com/ => https://example.com
   baseUrl = baseUrl.replace(/\/+$/g, "");
 
-  const rssItems = sortedPosts.map(({ frontmatter, slug }) => {
-    if (frontmatter.external) {
-      const title = frontmatter.title;
-      const pubDate = frontmatter.date;
-      const link = frontmatter.url;
+  const rssItems = sortedPosts.map(({ data: frontmatter, id }) => {
+    const slug = id.replace(/\.mdoc$/, "");
 
+    if (frontmatter.external) {
       return {
-        title,
-        pubDate,
-        link,
+        title: frontmatter.title,
+        pubDate: frontmatter.date,
+        link: frontmatter.url,
       };
     }
 
-    const title = frontmatter.title;
-    const pubDate = frontmatter.date;
-    const description = frontmatter.description;
-    const link = `${baseUrl}/blog/${slug}`;
-
     return {
-      title,
-      pubDate,
-      description,
-      link,
+      title: frontmatter.title,
+      pubDate: frontmatter.date,
+      description: frontmatter.description,
+      link: `${baseUrl}/blog/${slug}`,
     };
   });
 
@@ -54,9 +38,8 @@ export async function GET() {
     site: baseUrl,
     items: rssItems,
   });
+
   return new Response(rssFeed.body, {
-    headers: {
-      "Content-Type": "application/xml",
-    },
+    headers: { "Content-Type": "application/xml" },
   });
-};
+}

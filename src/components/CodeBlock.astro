@@ -4,7 +4,10 @@ import { Prism } from "@astrojs/prism";
 const { language, content } = Astro.props;
 ---
 
-<Prism lang={language} code={content} />
+{language
+  ? <Prism lang={language} code={content} />
+  : <pre><code>{content}</code></pre>
+}
 
 <style is:global>
   /**

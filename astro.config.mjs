@@ -2,6 +2,7 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
+import markdoc from "@astrojs/markdoc";
 
 /* 
   We are doing some URL mumbo jumbo here to tell Astro what the URL of your website will be.
@@ -36,6 +37,7 @@ export default defineConfig({
     responsiveStyles: true,
   },
   integrations: [
+    markdoc(),
     sitemap(),
   ],
   vite: {

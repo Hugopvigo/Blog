@@ -1,22 +1,15 @@
 ---
-import { readAll } from "../lib/markdoc/read";
-import { blog } from "../lib/markdoc/frontmatter.schema";
+import { getCollection } from "astro:content";
 import PageLayout from "../layouts/PageLayout.astro";
 import PageMeta from "../components/PageMeta.astro";
 import { SITE_TITLE, formatDate } from "../config";
 
-const posts = await readAll({
-  directory: "blog",
-  frontmatterSchema: blog,
-});
+const posts = await getCollection("blog", ({ data }) => !data.draft);
 
-const sortedPosts = posts
-  .filter((p) => p.frontmatter.draft !== true)
-  .sort(
-    (a, b) =>
-      new Date(b.frontmatter.date).valueOf() -
-      new Date(a.frontmatter.date).valueOf()
-  );
+const sortedPosts = posts.sort(
+  (a, b) =>
+    new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
+);
 ---
 
 <PageLayout>
@@ -28,14 +21,15 @@ const sortedPosts = posts
     <ul class="unset">
       {
         sortedPosts.map((post) => {
-          const formattedDate = formatDate(post.frontmatter.date);
+          const slug = post.id.replace(/\.mdoc$/, "");
+          const formattedDate = formatDate(post.data.date);
           return (
             <li class="[&>*]:p-0 border-b border-text-muted/10 last:border-b-0">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 py-3 sm:py-4 group">
                 <div class="title">
-                  {post.frontmatter.external ? (
+                  {post.data.external ? (
                     <a
-                      href={post.frontmatter.url}
+                      href={post.data.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       class="unset
@@ -45,13 +39,13 @@ const sortedPosts = posts
                         from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
                       "
                     >
-                      <span>{post.frontmatter.title}</span>
+                      <span>{post.data.title}</span>
                       <i class="ml-1.5 text-[11px] fa-solid fa-up-right-from-square opacity-60" />
                     </a>
                   ) : (
                     <a
-                      href={`/blog/${post.slug}`}
-                      transition:name={`post-title-${post.slug}`}
+                      href={`/blog/${slug}`}
+                      transition:name={`post-title-${slug}`}
                       class="unset
                         transition-[background-size] duration-300
                         bg-gradient-to-r bg-left-bottom bg-no-repeat
@@ -59,12 +53,12 @@ const sortedPosts = posts
                         from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
                       "
                     >
-                      {post.frontmatter.title}
+                      {post.data.title}
                     </a>
                   )}
                 </div>
                 <time
-                  datetime={post.frontmatter.date.toISOString()}
+                  datetime={post.data.date.toISOString()}
                   class="text-text-muted text-sm tabular-nums shrink-0"
                 >
                   {formattedDate}
