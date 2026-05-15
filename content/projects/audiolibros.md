@@ -1,6 +1,0 @@
----
-title: Audiolibros
-description: Plataforma de audiolibros.
-date: 2024-10-10
-url: https://github.com/Hugopvigo/Audiolibros
----

@@ -1,0 +1,121 @@
+---
+import type { Heading } from "../lib/content-utils";
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const visible = headings.filter((h) => h.depth <= 3);
+---
+
+{
+  visible.length >= 2 && (
+    <nav class="toc" aria-label="Tabla de contenidos">
+      <p class="toc-title">Contenidos</p>
+      <ol class="toc-list">
+        {visible.map((h) => (
+          <li style={`padding-left: ${(h.depth - 1) * 0.75}rem`}>
+            <a href={`#${h.slug}`} class="toc-link" data-heading={h.slug}>
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .toc {
+    position: fixed;
+    top: 5.5rem;
+    left: calc(50% + 25rem);
+    width: 13rem;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+    display: none;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 1300px) {
+    .toc {
+      display: block;
+    }
+  }
+
+  .toc-title {
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted, #888);
+    margin: 0 0 0.6rem 0;
+  }
+
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .toc-list li {
+    margin: 0;
+  }
+
+  .toc-link {
+    color: var(--color-text-muted, #888);
+    text-decoration: none;
+    display: block;
+    transition: color 0.15s;
+    border-left: 2px solid transparent;
+    padding-left: 0.5rem;
+  }
+
+  .toc-link:hover {
+    color: var(--color-text-link, #0ea5e9);
+  }
+
+  .toc-link.active {
+    color: var(--color-text-link, #0ea5e9);
+    border-left-color: currentColor;
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  function initToc() {
+    const links = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
+    if (!links.length) return;
+
+    const headingIds = Array.from(links).map((l) => l.dataset.heading!);
+    const headingEls = headingIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    let current = "";
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            current = entry.target.id;
+          }
+        }
+        links.forEach((l) => {
+          l.classList.toggle("active", l.dataset.heading === current);
+        });
+      },
+      { rootMargin: "-10% 0px -75% 0px" }
+    );
+
+    headingEls.forEach((el) => observer.observe(el));
+  }
+
+  initToc();
+  document.addEventListener("astro:page-load", initToc);
+</script>

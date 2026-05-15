@@ -1,14 +1,19 @@
 ---
 import PageLayout from "./PageLayout.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import BackToTop from "../components/BackToTop.astro";
 import { SITE_LANG, formatDate } from "../config";
+import type { Heading } from "../lib/content-utils";
 
 export interface Props {
   title: string;
   date: Date;
   slug?: string;
+  readingTime?: number;
+  headings?: Heading[];
 }
 
-const { title, date, slug } = Astro.props;
+const { title, date, slug, readingTime, headings = [] } = Astro.props;
 const formattedDate = formatDate(date);
 ---
 
@@ -30,7 +35,17 @@ const formattedDate = formatDate(date);
         {title}
       </span>
     </h1>
-    <time class="block mb-[2em] text-text-muted">{formattedDate}</time>
+    <div class="not-prose flex items-center gap-2 mb-[2em] text-text-muted text-sm">
+      <time>{formattedDate}</time>
+      {readingTime && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span>{readingTime} min de lectura</span>
+        </>
+      )}
+    </div>
     <slot name="content" />
   </section>
+  <TableOfContents headings={headings} />
+  <BackToTop />
 </PageLayout>

@@ -1,6 +1,0 @@
----
-title: Dashboard Hantavirus
-description: Dashboard para visualización de datos de hantavirus.
-date: 2026-05-01
-url: https://hugopvigo.github.io/dashboard_virus/
----

@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import BlogPostMeta from "../../components/BlogPostMeta.astro";
 import ContentLayout from "../../layouts/ContentLayout.astro";
 import { SITE_URL } from "../../config";
+import { getReadingTime, extractHeadings } from "../../lib/content-utils";
 
 export async function getStaticPaths() {
   const posts = await getCollection(

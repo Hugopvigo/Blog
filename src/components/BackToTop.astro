@@ -1,0 +1,55 @@
+---
+---
+
+<button id="back-to-top" aria-label="Volver arriba" title="Volver arriba">
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<style>
+  #back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateY(0.5rem);
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 50;
+    background-color: var(--color-primary-blue, #0ea5e9);
+    color: #fff;
+  }
+
+  #back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+</style>
+
+<script>
+  function initBackToTop() {
+    const btn = document.getElementById("back-to-top");
+    if (!btn) return;
+
+    const onScroll = () => {
+      btn.classList.toggle("visible", window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    btn.addEventListener("click", () =>
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    );
+  }
+
+  initBackToTop();
+  document.addEventListener("astro:page-load", initBackToTop);
+</script>
