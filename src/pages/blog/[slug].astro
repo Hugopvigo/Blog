@@ -21,6 +21,8 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const frontmatter = entry.data;
 const slug = entry.id.replace(/\.mdoc$/, "");
+const readingTime = getReadingTime(entry.body ?? "");
+const headings = extractHeadings(entry.body ?? "");
 
 const ogImageAbsoluteUrl =
   frontmatter.external !== true && frontmatter.ogImagePath
@@ -28,7 +30,7 @@ const ogImageAbsoluteUrl =
     : undefined;
 ---
 
-<ContentLayout title={frontmatter.title} date={frontmatter.date} slug={slug}>
+<ContentLayout title={frontmatter.title} date={frontmatter.date} slug={slug} readingTime={readingTime} headings={headings}>
   <BlogPostMeta
     title={frontmatter.title}
     description={frontmatter.external ? undefined : frontmatter.description}
