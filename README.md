@@ -127,4 +127,14 @@ Contenido aquí...
 
 ## 📄 Licencia
 
-MIT © [Hugo Perez-Vigo](https://hugopvigo.es)
+MIT
+
+---
+
+<div align="center">
+
+**Desarrollado por [Hugo Perez-Vigo](https://hugopvigo.es)** · [@hugopvigo](https://x.com/hugopvigo)
+
+[![GitHub](https://img.shields.io/badge/GitHub-Hugopvigo-181717?style=for-the-badge&logo=github)](https://github.com/Hugopvigo)
+
+</div>
