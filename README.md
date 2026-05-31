@@ -127,7 +127,7 @@ Contenido aquí...
 
 ## 📄 Licencia
 
-MIT
+**CC BY-NC-SA 4.0** — Compartir con atribución, sin uso comercial. Consulta [LICENSE](LICENSE) para más detalles.
 
 ---
 
