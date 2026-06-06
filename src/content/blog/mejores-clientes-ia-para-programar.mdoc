@@ -1,0 +1,211 @@
+---
+external: false
+title: "Los mejores clientes de IA para programar en 2026"
+description: "Claude Code, OpenCode, Pi y más. Mis recomendaciones reales después de probar estas herramientas a diario."
+date: 2026-06-06
+---
+
+Os voy a ahorrar el rollo de "hoy en día la IA está en todas partes" y demás frases hechas que ya sabéis. El caso es que hace unas semanas me puse a probar un montón de herramientas de IA para programar, unas de terminal y otras de IDE, y al final he acabado con una lista clara de qué mierda usar para cada cosa.
+
+Porque sí, hay demasiadas opciones. Y encima cada tres meses sale algo nuevo que promete ser la hostia. Así que aquí va mi experiencia personal, sin bullshit, con lo que he probado y lo que de verdad funciona.
+
+Como dato de contexto: llevo usando **Claude Code** y **OpenCode** como herramientas principales desde hace tiempo. Y ahora estoy probándole a **Pi**, un agente de terminal *open-source* que me tiene bastante enganchado por su enfoque minimalista y extensible. Pero ya os cuento más adelante.
+
+---
+
+# Los de terminal (CLI)
+
+Si vivís en el terminal (y si no, ¿qué hacéis aquí?), estos son los que merecen la pena.
+
+### Claude Code
+
+Empecé con *Claude Code* porque me hartaba de que *Cursor* se quedase sin cuota a mitad de jornada. Y la verdad, ha sido todo un descubrimiento. Lee tu codebase entero, ejecuta tareas de varios pasos y lo que más me ha sorprendido es que *razona* de verdad. Le sueltas un problema complejo y ves cómo piensa antes de actuar.
+
+Lo uso a diario para refactoring serio y arquitectura. Donde más brilla es en esas tareas donde necesitas que la IA no solo escriba código sino que *entienda* por qué lo escribe. Para mí es el que mejor maneja contextos largos y razonamiento sostenido.
+
+- **Proveedor:** Anthropic
+- **Modelo:** Claude Opus 4.6 / Sonnet 4.6 (1M tokens de contexto)
+- **Precio:** $20/mes (Pro), $100/mes (Max 5x), $200/mes (Max 20x). **Sin tier gratis.**
+- **Lo que me gusta:** Mejor *SWE-bench* del mercado, agentes paralelos (*agent teams*), ediciones multi-archivo deterministas, razonamiento de otro nivel.
+- **Lo que no:** Solo modelos Anthropic (*vendor lock-in* puro), el plan de $20 se agota en pocas horas si lo usas en serio, y para lo que cuesta esperas un poquito más.
+- **Descarga:** [github.com/anthropics/claude-code](https://github.com/anthropics/claude-code)
+
+> **Mi recomendación:** Si puedes permitirte $100/mes, ve a por el Max 5x. El de $20 es una puerta de entrada que se cierra rápido. Yo lo uso para todo lo que requiera pensar.
+
+---
+
+### Pi Coding Agent
+
+Este es el último en caer en mi radar y, sinceramente, me ha dejado bastante loco. *Pi* es un *harness* de terminal minimalista, *open-source* (MIT), que se autodefine como "el arnés, pero el tuyo". Lo que más me flipa es su filosofía: en vez de darte mil features pre-hechas, te da lo justo y te deja construir lo que necesites con *extensions*, *skills* y *prompt templates*.
+
+Conecta con 15+ proveedores (Claude, OpenAI, Google, Azure, Bedrock, Ollama local...) y puedes cambiar de modelo a mitad de sesión con `/model` o `Ctrl+L`. Lo que más me ha llamado la atención es el sistema de **sessions en árbol**: puedes navegar a cualquier punto anterior y *bifurcar* la conversación desde ahí. Es como *git* para tus chats con la IA.
+
+Otra cosa que me encanta: Pi puede *modificarse a sí mismo*. Le preguntas "cómo funcionan las extensiones", lee su propia documentación, y te lo explica. Si quieres una nueva herramienta, se la pides y la construye. Es un sistema genuinamente auto-mejorable.
+
+- **Proveedor:** earendil-works (Mario Zechner / badlogic)
+- **Modelo:** El que quieras (15+ proveedores, switching mid-session)
+- **Precio:** Gratis y *open-source* (MIT). Solo pagas las *API keys* que uses.
+- **Lo que me gusta:** Filosofía minimalista y extensible, sessions en árbol, skills y extensions, self-documenting, cuatro modos de integración (TUI, print/JSON, RPC, SDK), puede editar su propio código.
+- **Lo que no:** No trae sub-agents ni *plan mode* (los construyes tú con extensions), comunidad más pequeña que Aider, requiere cierto nivel de comodidad con la línea de comandos para sacarle partido.
+- **Descarga:** [pi.dev](https://pi.dev/) / [github.com/earendil-works/pi](https://github.com/earendil-works/pi) — `npm install -g @earendil-works/pi-coding-agent`
+
+> **Mi recomendación:** Si te va lo minimalista y te gusta cacharrear, dale una semana. Yo lo estoy probando como segunda opción a Claude Code y me está gustando mucho. Es el "hazlo tú mismo" llevado al extremo, y eso me encanta. Si añades DeepSeek.. no te digo más.
+
+---
+
+### Codex CLI
+
+Lo probé hace poco y me pareció interesante, sobre todo lo de lanzar tareas en la nube. Le dices "arregla este issue" y te monta un contenedor, hace los cambios y te abre un *PR*. Puedes lanzar varios en paralelo mientras tú te tomas un café.
+
+El problema es que requiere suscripción a ChatGPT o API key de OpenAI. Si ya tienes una, perfecto. Si no, es otro gasto mensual encima.
+
+- **Proveedor:** OpenAI
+- **Modelo:** GPT-5.5, GPT-5.4, GPT-5.3-Codex
+- **Precio:** Incluido con suscripciones ChatGPT (desde $20/mes). API *pay-per-use*.
+- **Lo que me gusta:** Tareas autónomas en la nube, es *open-source* (Rust), integración con GitHub muy buena.
+- **Lo que no:** Solo modelos OpenAI, si no tienes suscripción es otro pastizal, y el *vendor lock-in* es considerable.
+- **Descarga:** [github.com/openai/codex](https://github.com/openai/codex) — `npm i -g @openai/codex`
+
+---
+
+### Gemini CLI
+
+Este lo probé por curiosidad y por la cuenta del trabajo. **Es gratis.** Antes no estaba mal, ahora han actualizado a Antigravity y se acabó lo bueno. Con Flash 3.5 acabas la sesion antes de empezar. De apoyo o alguna tarea en concreto, pero no lo veo para el dia a dia.
+
+¿Es tan bueno como Claude? No. De apoyo o alguna tarea en concreto, pero no lo veo para el dia a dia.
+
+- **Proveedor:** Google
+- **Modelo:** Gemini 3.1 Pro / 3.5 Flash
+- **Precio:** Gratis* (ya se está acabando lo bueno). API *pay-per-use* para más volumen.
+- **Lo que me gusta:** Tier gratis, analiza imágenes y PDFs, subagents personalizables.
+- **Lo que no:** *SWE-bench* más bajo que Claude (63.8% vs 80.8%), el ecosistema Google siempre me da un poco de desconfianza, y tuvieron un fallo de seguridad gordo en CI hace poco.
+- **Descarga:** [github.com/google-gemini/gemini-cli](https://github.com/google-gemini/gemini-cli) — `npm install -g @google/gemini-cli` OJO que ahora estan migrando ya a Antigravity, asi que igual para cuando leas esto ya no funciona.
+
+> **Mi recomendación:** Cógelo como herramienta gratuita de apoyo. Lo uso para tareas ligeras y para cuando Claude se me queda caro.
+
+---
+
+### OpenCode
+
+Este es uno de mis dos *daily drivers*. Es *open-source*, escrito en Go, y conecta con **más de 75 proveedores de IA**. Puedes usar tu suscripción de Copilot, tu API de OpenAI, DeepSeek, Ollama local... lo que tengas. Y lo mejor: GitHub se asoció oficialmente con ellos en enero de 2026, así que si ya pagas por Copilot, lo puedes usar aquí sin coste adicional.
+
+Lo uso cuando quiero cambiar de modelo sin cambiar de herramienta. Es como el *swiss army knife* de los clientes de IA. Para mí es el "modelo agnóstico" de referencia, y el que más flexibilidad me da cuando necesito probar cosas.
+
+- **Proveedor:** Anomalyco (comunidad)
+- **Modelo:** El que quieras (75+ proveedores)
+- **Precio:** Gratis y *open-source*. Solo pagas las *API keys* que uses.
+- **Lo que me gusta:** Sin *vendor lock-in*, usa suscripciones que ya tienes, sesiones paralelas, sin retención de datos, integración LSP.
+- **Lo que no:** No está optimizado para ningún modelo en concreto, y se nota que no tiene el presupuesto de Anthropic o Google detrás.
+- **Descarga:** [github.com/opencode-ai/opencode](https://github.com/opencode-ai/opencode)
+
+---
+
+### Goose
+
+Lo probé una semana y la verdad es que es... peculiar. La idea es buenísima: un agente autónomo que hace las cosas sin supervisión. Le dices "arregla esto" y se pone manos a la obra. Pero en la práctica a veces se pierde por los pasillos de tu codebase como un bebé borracho en una discoteca.
+
+Tiene plugins y todo, pero la comunidad es pequeña y el comportamiento es un poco impredecible. Muy buen concepto, pero le falta madurez.
+
+- **Proveedor:** Block (Square)
+- **Modelo:** Varios (configurable)
+- **Precio:** Gratis y *open-source*.
+- **Lo que me gusta:** Autonomía real, sistema de plugins, extensible.
+- **Lo que no:** Comunidad pequeña, a veces se confunde, menos maduro que Aider o Claude Code.
+- **Descarga:** [github.com/block/goose](https://github.com/block/goose)
+
+---
+
+# Los de IDE
+
+Si preferís no salir del editor, aquí van mis recomendaciones.
+
+### Cursor
+
+Yo uso *Cursor* a diario y la verdad es que la experiencia visual es la mejor del mercado. Es un *fork* de VS Code con un *agent mode* que planifica ediciones multi-archivo, ejecuta comandos en terminal y se auto-corrige. Soporta todos los modelos frontiers y puedes cambiar de uno a otro en cada petición.
+
+El *agent mode* es brutal para refactoring visual. Y las *tab completions* predicen tu siguiente edición, no solo el siguiente token.
+
+- **Proveedor:** Anysphere
+- **Modelo:** Claude, GPT, Gemini (tú eliges)
+- **Precio:** Gratis (limitado), Pro $20/mes, Pro+ $60/mes, Ultra $200/mes.
+- **Lo que me gusta:** Mejor integración visual, agent mode potente, multi-modelo, hasta 8 agentes paralelos en la nube.
+- **Lo que no:** Es un *fork* de VS Code (siempre va detrás de upstream, extensiones que fallan), los planes caros son *realmente* caros.
+- **Descarga:** [cursor.com](https://cursor.com/)
+
+---
+
+### GitHub Copilot
+
+El que todo el mundo conoce y el que muchos empezamos a usar. Ha dejado de ser solo *autocomplete* para convertirse en un agente que puede asignar un *issue*, crear una rama, escribir código y abrir un *PR* sin que tú hagas nada. El *free tier* es generoso: 2.000 completados y 50 peticiones de chat al mes.
+
+Lo uso como herramienta de apoyo en VS Code. Para tareas rápidas y completados, es más que suficiente. Pero para trabajo serio, lo combino con Claude Code o Cursor.
+
+- **Proveedor:** GitHub / Microsoft
+- **Modelo:** Varios (GPT, Claude, Gemini según plan)
+- **Precio:** Gratis (tier limitado), Pro $10/mes, Pro+ $39/mes, Business $19/usuario/mes. <- Aqui tengo que meter el aviso de que hace una semana han cambiado los precios de Github a pago por tokens, asi que descartaria la opción.
+- **Lo que me gusta:** Ecosistema GitHub integrado.
+- **Lo que no:** *Premium requests* limitados, el agente aún es inmaduro para tareas complejas, y en junio de 2026 lo han pasado a *billing* por consumo.
+- **Descarga:** [github.com/features/copilot](https://github.com/features/copilot)
+
+---
+
+### Cline / Kilo Code / Roo Code
+
+Tres hermanos que nacieron de la misma idea: extensión de VS Code *open-source* y *model-agnostic*. *Cline* es el original, *Kilo Code* tiene la comunidad más grande, y *Roo Code* añade modos especializados. Las tres son gratuitas, las tres usan *BYOK* y las tres hacen esencialmente lo mismo.
+
+Los uso dependiendo del proyecto. Si quiero algo rápido y sencillo, *Cline*. Si quiero más opciones, *Kilo*. Para *code review*, *Roo*. La diferencia entre ellas es más bien de gustos.
+
+- **Proveedor:** Comunidad open-source
+- **Modelo:** El que quieras (75+ proveedores)
+- **Precio:** Gratis. Solo pagas tus *API keys*.
+- **Lo que me gusta:** Total libertad de modelo, *open-source*, sin suscripciones.
+- **Lo que no:** Menos pulido que Cursor, la experiencia varía mucho según el modelo que conectes.
+- **Descarga:** [cline.bot](https://cline.bot/) / [github.com/kilocode-ai/kilo](https://github.com/kilocode-ai/kilo) / [roocode.com](https://roocode.com/)
+
+---
+
+### Windsurf
+
+La alternativa *barata* a Cursor. Lo probé un par de semanas y la verdad es que para el precio ($15/mes) ofrece bastante. Tiene su propia tecnología *Cascade* para razonamiento multi-paso y *free completions* ilimitadas.
+
+Si no queréis pagar $20 por Cursor y queréis algo más integrado que una simple extensión, aquí tenéis una opción decente. No es tan potente como Cursor, pero cumple.
+
+- **Proveedor:** Codeium
+- **Modelo:** Varios (configurable)
+- **Precio:** Gratis (tier generoso), Pro $15/mes.
+- **Lo que me gusta:** Más barato que Cursor, completions ilimitadas, interfaz limpia.
+- **Lo que no:** Menos *features* que Cursor, comunidad más pequeña, la tecnología aún no está tan pulida.
+- **Descarga:** [windsurf.com](https://windsurf.com/)
+
+---
+
+# La tabla rápida
+
+Si no os ha dado tiempo a leer todo, aquí va el resumen:
+
+| Herramienta | Tipo | Precio | Open Source | Mi valoración |
+|---|---|---|---|---|
+| **Claude Code** | CLI | $20-200/mes | No | Mi *daily driver*, el que mejor razona |
+| **OpenCode** | CLI | Gratis | Sí | Mi otro *daily driver*, el más flexible |
+| **Pi Coding Agent** | CLI | Gratis | Sí | El descubrimiento del año, minimalista y extensible |
+| **Codex CLI** | CLI | Desde $20/mes | Sí | Bueno si ya tienes ChatGPT |
+| **Gemini CLI** | CLI | Gratis | Sí | El mejor gratis, sin discusión |
+| **Goose** | CLI | Gratis | Sí | Buena idea, le falta madurez |
+| **Cursor** | IDE | $0-200/mes | No | La mejor experiencia visual |
+| **GitHub Copilot** | IDE/CLI | $39/mes | No | Para empezar gratis, perfecto |
+| **Cline/Kilo/Roo** | IDE | Gratis | Sí | Libertad total, sin compromisos |
+| **Windsurf** | IDE | Gratis-$15/mes | No | Cursor barato, cumple |
+
+---
+
+# Mi resumen personal
+
+Os voy a dar mi lista personal, la que yo uso yo:
+
+- **Para trabajo diario serio:** *Claude Code* (cuando necesito razonamiento profundo) + *Cursor* o *Codex* (cuando necesito verlo en pantalla).
+- **Para cambiar de modelo sin cambiar de herramienta:** *OpenCode*. Conecto lo que tengo y listo, es mi otro *daily driver*.
+- **Para experimentar y cacharrear:** *Pi Coding Agent*. Lo estoy probando como segunda opción y me tiene enganchado por su enfoque minimalista.
+- **Para tareas rápidas y gratuitas:** *Gemini CLI*. No hay discusión.
+- **Para empezar sin gastar nada:** *Gemini CLI*
+
+> La verdad es que el panorama cambia cada tres meses. Lo que hoy es *top* mañana puede ser *legacy*. Así que no os caséis con nadie: probad, experimentad y cambiad cuando algo mejor aparezca. Lo importante no es la herramienta que uséis. Lo importante es que estéis usando una. Porque el desarrollador que no usa IA en 2026 es como el que no usaba *Google* en 2005: técnicamente puede, pero se está dejando la vida en vano.
