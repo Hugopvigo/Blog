@@ -19,6 +19,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "4.1.18",
     "astro": "^6.1.6",
+    "esbuild": "^0.28.1",
     "slugify": "^1.6.5",
     "tailwindcss": "4.1.18"
   },
