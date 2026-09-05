@@ -1,0 +1,93 @@
+---
+external: false
+title: "DNS en casa, en tus manos: XDP, Pi-hole y DoT en el router"
+description: "Cómo he montado la resolución DNS de mi casa con XDP, DoT y Pi-hole: privacidad frente a bloqueos y miradas indiscretas, con buen rendimiento."
+date: 2026-09-05
+---
+
+![DNS local con XDP](/images/XDP_DNS_Local.jpg)
+
+## El problema: tu operadora sabe (y decide) dónde puedes navegar.
+
+Cada vez que escribes una dirección en el navegador, tu equipo pregunta primero a un servidor **DNS**: la "agenda telefónica" de Internet (El que tradude el nombre de tu web en una IP de números). Y si no has tocado nada, esa agenda la pone tu **operadora**. Y eso significa dos cosas incómodas:
+
+1. **Tu proveedor ve todo lo que visitas.** No el contenido (eso lo cifra HTTPS), pero sí *qué páginas* abres, cuándo y desde qué aparatos. Un perfil de navegación bastante preciso, regalado.
+2. **Tu proveedor puede bloquear páginas por cortesía.** Y aquí viene lo serio: los bloqueos judiciales, como los que aplican en España para frenar las retransmisiones piratas de LaLiga, se ejecutan muchas veces a nivel de DNS o de IP, y en la práctica **arrastran a páginas perfectamente legales** que comparten infraestructura con la diana del bloqueo. Webs de terceros, CDN, servicios legítimos… que de repente "no funcionan" un fin de semana por culpa de un partido. Y tú sin piratear nada y sin explicación.
+
+La consecuencia práctica: la resolución DNS "de serie" es a la vez una **ventana de vigilancia** y un **botón de censura** que no controlas. Y este problema cada día es mayor, porque los ISP no te permiten en muchos casos cambiar el router, ni cambiar el DNS. 
+
+Por eso y aburrido de que Tebas (LaLiga) estén dia si y día también afectando a servicios que uso, decidí montar el mío propio en casa.
+
+## Qué es XDP (y qué no es)
+
+**XDP** (`dns.xdp.es`) es un **resolver DNS español, abierto y con enfoque en la privacidad**:
+
+- **Sin logs** de lo que consultas y **sin venta de datos**. No hay modelo de negocio sobre tu historial.
+- Soporta **DNS sobre TLS (DoT)** y **DNS sobre HTTPS (DoH)**: la consulta viaja **cifrada**, así que tu operadora la ve pasar como tráfico indistinguible, sin saber a dónde preguntas.
+- **Valida DNSSEC**, es decir, comprueba que las respuestas DNS no han sido manipuladas por el camino.
+
+No es una VPN ni un proxy: no esconde tu IP ni tu tráfico web. Lo que hace es **descargarle a tu operadora esa primera pregunta** ("¿a qué IP corresponde esta web?"), que es justo donde se espía y se bloquea.
+
+Además, responder desde España tiene su ventaja de cercanía: en mis mediciones, las consultas directas a XDP rondan los **3–80 ms**. Más que suficiente.
+
+## Por qué lo he montado
+
+Tres motivos concretos, nada de paranoia deportiva:
+
+1. **Privacidad real** — que mi operadora no construya un perfil con cada página que visita toda la familia.
+2. **Inmunidad a los bloqueos chapuceramente amplios** — cuando un bloqueo judicial se desvía y tumba servicios legales que nada tienen que ver, mi red no se entera: resuelvo por mi cuenta, cifrado.
+3. **Control de la red de casa** — de paso, bloqueo publicidad y rastreadores para todos los dispositivos, incluidos televisores y cacharros donde no puedes instalar nada.
+
+## El montaje: Pi-hole + router Omada + XDP
+
+La arquitectura es una cadena sencilla:
+
+```
+Móvil / PC / TV ──► Pi-hole (192.168.3.200) ──► Router Omada ──[DoT cifrado]──► XDP ──► Internet
+                        │                            └──[si XDP cae]──► Cloudflare / Quad9
+                        └─ si es publicidad o rastreo: lo bloquea y no sale
+```
+
+**Pieza a pieza:**
+
+1. **Pi-hole** (en un mini PC de casa): todos los dispositivos preguntan aquí. Bloquea dominios de anuncios y rastreo —varios millones en blocklist— y hace de **caché**, así que lo repetido se resuelve en 0 ms sin salir de casa.
+2. **El router Omada** actúa de intermediario: recibe lo que Pi-hole no ha bloqueado y lo envía **cifrado por DoT (puerto 853)** hasta `dns.xdp.es`. El tramo router → XDP va "envuelto" en TLS: la operadora solo ve bytes cifrados.
+3. **Cloudflare y Quad9** quedan configurados como **reserva de emergencia**: si XDP no respondiera, se resolvería por ellos en plano. La casa nunca se queda sin DNS. (aunque es un backup, mejor dejarlo tambien como DoT en el router y que no vaya el tráfico en claro)
+
+Lo bonito es que **ningún dispositivo necesita configuración**: el DHCP del router les dice automáticamente "pregunta a Pi-hole", y listo. Móviles, portátiles, la tele, todo enganchado.
+
+### Las trampas que me encontré (para que no te pase)
+
+- **El router nunca debe apuntar a Pi-hole como su propio DNS.** Si lo haces, creas un bucle (Pi-hole pregunta al router, que pregunta a Pi-hole…) y el DNS de la casa muere. Pi-hole pregunta al router; el router sale cifrado a XDP. Así de simple, así de sagrado.
+- **El "DNS privado" de Android se salta Pi-hole.** Si lo tienes apuntando a un host concreto, desactívalo o ponlo en automático, o ese móvil navegará por libre.
+- **Pi-hole es un punto único de fallo.** Si el mini PC se apaga, la casa se queda sin DNS hasta que vuelva. Vivible en casa, conviene saberlo.
+
+### El sobresalto del primer día: "¡va lento!"
+
+Justo después de montarlo, algunas webs cargaban a tirones y el dedo acusador apuntó a XDP o al cifrado. Medido con ráfagas de consultas:
+
+| Quién responde | Tiempo |
+|---|---|
+| XDP directo | 3–80 ms |
+| Router → XDP (DoT) | 12–33 ms |
+| **Mi Pi-hole** | **1,5–4,5 s** (!!) |
+| **Mi Pi-hole (optimizado)** | **< 1 ms (caché) / 15–35 ms** |
+
+Inocente: XDP y el DoT volaban; el cuello de botella era **mi propio Pi-hole**. Dos meteduras de pata mías: había activado DNSSEC en Pi-hole a la vez que en XDP (redundante y problemático) generando cientos de respuestas rotas por hora, y llevaba una blocklist de **7 millones de dominios** cargada de listas duplicadas. Con DNSSEC bien puesto (solo en XDP) y la lista recortada, la casa vuela.
+
+Lección de manual: antes de echarle la culpa a la pieza nueva, **mide pieza a pieza**. El fallo casi siempre está en casa — literalmente.
+
+## Resultados
+
+- **Consultas habituales en 0–1 ms** (caché) y las nuevas en decenas de ms. Ninguna lentitud percibida en el día a día.
+- **Cero ventana de observación para la operadora**: todo el DNS sale cifrado por DoT.
+- **Inmunidad práctica a bloqueos DNS / secuestros de resolución**: si un bloqueo judicial arrastra un servicio legítimo a nivel de IP en el tránsito de mi operadora, al menos la capa de resolución deja de ser el cuello de botella que me deja fuera.
+- **Toda la casa sin anuncios** ni rastreo, televisión incluida, sin instalar nada en ningún aparato.
+
+* Nota: Si la operadora aplica un bloqueo por IP, descartando paquetes BGP en su red o inspeccionando la cabecera SNI en el handshake TLS, el cambio no resolvería nada. Esto lo uso específicamente por el bloqueo masivo a ips legíticas que están bajo el paraguas de CF.
+
+## ¿Merece la pena?
+
+Si te preocupa mínimamente que tu operadora vea y pueda decidir qué páginas "existen", **sí**. El coste real: un mini PC o Raspberry Pi, una tarde de configuración y, si te animas, perder un rato limpiando listas de bloqueo sobrantes (te ahorrarás sustos de rendimiento). Todo el software es gratuito.
+
+Recuperar tu DNS es poca cosa, pero es tuya. Y de paso, los bloqueos torpes dejan de decidir qué webs existen en tu casa.
