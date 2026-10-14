@@ -27,7 +27,7 @@ const formattedDate = formatDate(date);
       <i class="fa-solid fa-arrow-left text-xs"></i>
       <span>Volver al blog</span>
     </a>
-    <h1 class="m-0 mb-[0.25em]" transition:name={slug ? `post-title-${slug}` : undefined}>
+    <h1 class="m-0 mb-[0.25em]">
       <span class="
         pl-6 relative block leading-[150%]
         after:absolute after:content-[''] after:w-2 after:h-full after:top-0 after:left-0 after:bg-primary-green
@@ -46,6 +46,6 @@ const formattedDate = formatDate(date);
     </div>
     <slot name="content" />
   </section>
-  <TableOfContents headings={headings} slot="main" />
-  <BackToTop slot="main" />
+  <TableOfContents headings={headings} slot="fixed" />
+  <BackToTop slot="fixed" />
 </PageLayout>

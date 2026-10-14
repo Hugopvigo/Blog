@@ -80,10 +80,7 @@ import HeaderLink from "./HeaderLink.astro";
       });
     }
 
-    initMobileMenu();
-
-    document.addEventListener("astro:after-swap", initMobileMenu);
-
+    document.addEventListener("astro:page-load", initMobileMenu);
     document.addEventListener("astro:before-swap", () => {
       document.body.style.overflow = "";
     });

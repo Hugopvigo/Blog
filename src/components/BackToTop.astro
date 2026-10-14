@@ -59,12 +59,14 @@
 
     window.addEventListener("scroll", backToTopScrollHandler, { passive: true });
     backToTopScrollHandler();
-    btn.addEventListener("click", () =>
-      window.scrollTo({ top: 0, behavior: "smooth" })
-    );
+    if (!btn.dataset.backToTopBound) {
+      btn.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" })
+      );
+      btn.dataset.backToTopBound = "1";
+    }
   }
 
-  initBackToTop();
   document.addEventListener("astro:page-load", initBackToTop);
   document.addEventListener("astro:before-swap", () => {
     if (backToTopScrollHandler) {
