@@ -72,6 +72,8 @@
     font-size: 1.125em;
     line-height: 1.85;
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    scrollbar-gutter: stable;
   }
 
   h1,
