@@ -33,18 +33,32 @@
     transform: translateY(0);
     pointer-events: auto;
   }
+
+  @media (max-width: 48rem) {
+    #back-to-top {
+      display: none;
+    }
+  }
 </style>
 
 <script>
+  let backToTopScrollHandler: (() => void) | null = null;
+
   function initBackToTop() {
+    if (backToTopScrollHandler) {
+      window.removeEventListener("scroll", backToTopScrollHandler);
+      backToTopScrollHandler = null;
+    }
+
     const btn = document.getElementById("back-to-top");
     if (!btn) return;
 
-    const onScroll = () => {
+    backToTopScrollHandler = () => {
       btn.classList.toggle("visible", window.scrollY > 300);
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", backToTopScrollHandler, { passive: true });
+    backToTopScrollHandler();
     btn.addEventListener("click", () =>
       window.scrollTo({ top: 0, behavior: "smooth" })
     );
@@ -52,4 +66,10 @@
 
   initBackToTop();
   document.addEventListener("astro:page-load", initBackToTop);
+  document.addEventListener("astro:before-swap", () => {
+    if (backToTopScrollHandler) {
+      window.removeEventListener("scroll", backToTopScrollHandler);
+      backToTopScrollHandler = null;
+    }
+  });
 </script>

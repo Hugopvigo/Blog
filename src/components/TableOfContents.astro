@@ -88,7 +88,12 @@ const visible = headings.filter((h) => h.depth <= 3);
 </style>
 
 <script>
+  let tocObserver: IntersectionObserver | null = null;
+
   function initToc() {
+    tocObserver?.disconnect();
+    tocObserver = null;
+
     const links = document.querySelectorAll<HTMLAnchorElement>(".toc-link");
     if (!links.length) return;
 
@@ -99,7 +104,7 @@ const visible = headings.filter((h) => h.depth <= 3);
 
     let current = "";
 
-    const observer = new IntersectionObserver(
+    tocObserver = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
@@ -113,9 +118,13 @@ const visible = headings.filter((h) => h.depth <= 3);
       { rootMargin: "-10% 0px -75% 0px" }
     );
 
-    headingEls.forEach((el) => observer.observe(el));
+    headingEls.forEach((el) => tocObserver!.observe(el));
   }
 
   initToc();
   document.addEventListener("astro:page-load", initToc);
+  document.addEventListener("astro:before-swap", () => {
+    tocObserver?.disconnect();
+    tocObserver = null;
+  });
 </script>

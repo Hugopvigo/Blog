@@ -64,6 +64,7 @@
           }
 
           iconElem.classList.remove("invisible");
+          toggle?.setAttribute("aria-checked", String(currentMode === "dark"));
 
           toggle?.addEventListener("click", () => {
             if (currentMode === "dark") {
@@ -81,6 +82,8 @@
               updateStorageTheme(modeToSwitch);
               currentMode = modeToSwitch;
             }
+
+            toggle?.setAttribute("aria-checked", String(currentMode === "dark"));
 
             if (!iconElem.classList.contains("duration-300")) {
               iconElem.classList.add("duration-300");

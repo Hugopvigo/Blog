@@ -88,7 +88,7 @@ export function getPageMeta({
     title: pageTitle,
     description: description,
     type: "website",
-    url: baseUrl,
+    url: canonicalUrl || baseUrl,
     image: ogImageAbsoluteUrl,
     imageAlt: ogImageAltText,
     imageWidth: ogImageWidth ? String(ogImageWidth) : undefined,

@@ -18,7 +18,7 @@ const formattedDate = formatDate(date);
 ---
 
 <PageLayout>
-  <slot name="meta" />
+  <slot name="meta" slot="meta" />
   <section slot="main" class="blog-post prose max-w-none prose-bubblegum">
     <a
       href="/blog"
@@ -46,6 +46,6 @@ const formattedDate = formatDate(date);
     </div>
     <slot name="content" />
   </section>
-  <TableOfContents headings={headings} />
-  <BackToTop />
+  <TableOfContents headings={headings} slot="main" />
+  <BackToTop slot="main" />
 </PageLayout>

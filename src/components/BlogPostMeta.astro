@@ -39,10 +39,10 @@ const { meta, og, twitter } = getBlogPostMeta({
   pageUrl,
   authorName: MY_NAME,
   publishDate,
-  ogImageAbsoluteUrl,
+  ogImageAbsoluteUrl: ogImageAbsoluteUrl || `${SITE_URL}/images/og.webp`,
   ogImageAltText,
-  ogImageWidth,
-  ogImageHeight,
+  ogImageWidth: ogImageWidth ?? 1200,
+  ogImageHeight: ogImageHeight ?? 630,
   siteOwnerTwitterHandle: TWITTER_HANDLE,
   contentAuthorTwitterHandle: TWITTER_HANDLE,
 });
@@ -58,6 +58,7 @@ const { meta, og, twitter } = getBlogPostMeta({
 {og.title && <meta property="og:title" content={og.title} />}
 {og.description && <meta property="og:description" content={og.description} />}
 {og.type && <meta property="og:type" content={og.type} />}
+<meta property="og:site_name" content={SITE_TITLE} />
 {og.url && <meta property="og:url" content={og.url} />}
 {og.author && <meta property="article:author" content={og.author} />}
 {

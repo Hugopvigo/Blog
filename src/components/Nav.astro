@@ -13,7 +13,7 @@ import HeaderLink from "./HeaderLink.astro";
     </section>
   </nav>
   <nav class="md:hidden" aria-label="Menú móvil">
-    <button id="mobile-menu-open" class="p-2 rounded-md bg-transparent border-0 cursor-pointer hover:bg-text-muted/10 transition-colors" aria-label="Abrir menú">
+    <button id="mobile-menu-open" class="p-2 rounded-md bg-transparent border-0 cursor-pointer hover:bg-text-muted/10 transition-colors" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
       <i class="fa-solid fa-bars text-lg" aria-hidden="true"></i>
     </button>
     <section
@@ -38,6 +38,8 @@ import HeaderLink from "./HeaderLink.astro";
 </Fragment>
 
   <script>
+    let escHandler: ((e: KeyboardEvent) => void) | null = null;
+
     function initMobileMenu() {
       const openBtn = document.querySelector("#mobile-menu-open");
       const closeBtn = document.querySelector("#mobile-menu-close");
@@ -45,34 +47,36 @@ import HeaderLink from "./HeaderLink.astro";
 
       if (!openBtn || !closeBtn || !menuElem) return;
 
-      openBtn.addEventListener("click", () => {
+      const openMenu = () => {
         menuElem.classList.remove("hide-menu");
         menuElem.classList.add("show-menu");
         document.body.style.overflow = "hidden";
-      });
+        openBtn.setAttribute("aria-expanded", "true");
+      };
 
-      closeBtn.addEventListener("click", () => {
+      const closeMenu = () => {
         menuElem.classList.remove("show-menu");
         menuElem.classList.add("hide-menu");
         document.body.style.overflow = "";
-      });
+        openBtn.setAttribute("aria-expanded", "false");
+      };
 
-      const escHandler = (e: KeyboardEvent) => {
+      openBtn.addEventListener("click", openMenu);
+      closeBtn.addEventListener("click", closeMenu);
+
+      if (escHandler) {
+        document.removeEventListener("keydown", escHandler);
+      }
+      escHandler = (e: KeyboardEvent) => {
         if (e.key === "Escape" && menuElem.classList.contains("show-menu")) {
-          menuElem.classList.remove("show-menu");
-          menuElem.classList.add("hide-menu");
-          document.body.style.overflow = "";
+          closeMenu();
         }
       };
       document.addEventListener("keydown", escHandler);
 
       const links = menuElem.querySelectorAll("a");
       links.forEach((link) => {
-        link.addEventListener("click", () => {
-          menuElem.classList.remove("show-menu");
-          menuElem.classList.add("hide-menu");
-          document.body.style.overflow = "";
-        });
+        link.addEventListener("click", closeMenu);
       });
     }
 
