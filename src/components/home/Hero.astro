@@ -1,0 +1,180 @@
+---
+---
+
+<section class="hero">
+  <p class="hero__prompt">
+    <span class="hero__dollar" aria-hidden="true">$</span>
+    <span class="hero__whoami">whoami</span><span class="hero__cursor"
+      aria-hidden="true"></span>
+  </p>
+
+  <h1 class="hero__title">
+    Hugo<br /><span class="hero__name">Perez</span>&#8209;Vigo<span
+      class="hero__underscore"
+      aria-hidden="true">_</span
+    >
+  </h1>
+
+  <ul class="unset hero__tags">
+    <li class="hero__tag hero__tag--filled">--ia</li>
+    <li class="hero__tag">--producto</li>
+    <li class="hero__tag">--telco</li>
+    <li class="hero__tag">--linux</li>
+  </ul>
+
+  <div class="hero__lines">
+    <p class="hero__line">
+      <span class="hero__chevron" aria-hidden="true">&gt;</span>
+      <span>Dirijo producto y operaciones en un MVNO español con un equipo pequeño.</span>
+    </p>
+    <p class="hero__line">
+      <span class="hero__chevron" aria-hidden="true">&gt;</span>
+      <span
+        >Aquí la IA no es un tema del que opinar: <span class="hero__accent"
+          ><strong
+            >es cómo sacamos plataformas que antes habrían pedido tres veces más
+            gente.</strong
+          ></span
+        ></span
+      >
+    </p>
+    <p class="hero__line">
+      <span class="hero__chevron" aria-hidden="true">&gt;</span>
+      <span class="hero__muted"
+        >De noche construyo apps del tiempo, bots de Telegram y cosas que no le
+        interesan a nadie más que a mí.</span
+      >
+    </p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(56px, 9vw, 120px) clamp(20px, 4vw, 40px)
+      clamp(48px, 7vw, 88px);
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .hero__prompt {
+    margin: 0;
+    font-size: clamp(16px, 1.6vw, 20px);
+    color: var(--mut);
+    display: flex;
+    align-items: baseline;
+  }
+
+  .hero__dollar {
+    color: var(--b);
+  }
+
+  /* whoami se escribe letra a letra: 6 pasos de 140 ms, solo CSS. */
+  .hero__whoami {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: bottom;
+    width: 0;
+    animation: hero-type 840ms steps(6) forwards;
+  }
+
+  @keyframes hero-type {
+    to {
+      width: 6ch;
+    }
+  }
+
+  .hero__cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.1em;
+    margin-left: 4px;
+    vertical-align: text-bottom;
+    background: var(--b);
+    animation: hero-blink 1s steps(1) infinite;
+  }
+
+  @keyframes hero-blink {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .hero__title {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(48px, 9.5vw, 136px);
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+  }
+
+  .hero__name {
+    color: var(--a);
+  }
+
+  .hero__underscore {
+    color: var(--b);
+  }
+
+  .hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+  }
+
+  .hero__tag {
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+
+  .hero__tag--filled {
+    background: var(--a);
+    color: var(--inv);
+    border-color: var(--a);
+    font-weight: 700;
+  }
+
+  .hero__lines {
+    max-width: 62ch;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: clamp(16px, 1.5vw, 18px);
+  }
+
+  .hero__line {
+    margin: 0;
+    display: flex;
+    gap: 12px;
+  }
+
+  .hero__chevron {
+    color: var(--a);
+  }
+
+  .hero__accent {
+    color: var(--b);
+  }
+
+  .hero__muted {
+    color: var(--mut);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__whoami {
+      width: 6ch;
+    }
+  }
+</style>

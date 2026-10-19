@@ -1,0 +1,82 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Snippet from "../Snippet.astro";
+import { postSlug, resolveSnippet } from "../../lib/content-utils";
+
+export interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const slug = postSlug(post);
+---
+
+<a class="featured" href={`/blog/${slug}`}>
+  <span class="featured__text">
+    <span class="featured__label">// destacado</span>
+    <span class="featured__title">{post.data.title}</span>
+    {post.data.description && (
+      <span class="featured__desc">{post.data.description}</span>
+    )}
+    <span class="featured__file">cat {slug}.md →</span>
+  </span>
+
+  <span class="featured__snippet">
+    <Snippet snippet={resolveSnippet(post)} size="md" />
+  </span>
+</a>
+
+<style>
+  .featured {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: clamp(28px, 4vw, 56px);
+    align-items: center;
+    padding: clamp(24px, 4vw, 48px);
+    border-radius: 18px;
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    color: var(--fg);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .featured:hover {
+    border-color: var(--a);
+    transform: translateY(-3px);
+  }
+
+  .featured__text {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .featured__label {
+    font-size: 13px;
+    color: var(--b);
+  }
+
+  .featured__title {
+    font-weight: 700;
+    font-size: clamp(26px, 3vw, 40px);
+    line-height: 1.12;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
+  .featured__desc {
+    color: var(--mut);
+  }
+
+  .featured__file {
+    color: var(--a);
+    font-weight: 700;
+  }
+
+  .featured__snippet {
+    display: block;
+    transform: rotate(1.5deg);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  }
+</style>

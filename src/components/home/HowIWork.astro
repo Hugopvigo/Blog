@@ -1,0 +1,188 @@
+---
+---
+
+<div class="work__blocks">
+  <div class="work__block">
+    <span class="work__title">
+      <span class="work__hash" aria-hidden="true">## </span>
+      Telco
+    </span>
+    <p class="work__text">
+      Ya.com cuando el ADSL era novedad, luego Tuenti, y en el mismo MVNO
+      desde 2013. Un sector que se reinventa cada década.
+    </p>
+  </div>
+
+  <div class="work__block">
+    <span class="work__title">
+      <span class="work__hash" aria-hidden="true">## </span>
+      Linux
+    </span>
+    <p class="work__text">
+      Antes Ubuntu, cada día más <a
+        href="https://www.debian.org/index.es.html"
+        target="_blank"
+        rel="noopener noreferrer">Debian</a
+      > — cosas de la edad y los <a
+        href="https://snapcraft.io/docs/installing-snap-on-ubuntu"
+        target="_blank"
+        rel="noopener noreferrer">Snap</a
+      >. Casi todo lo resuelvo con Python y Bash.
+    </p>
+  </div>
+
+  <div class="work__block">
+    <span class="work__title">
+      <span class="work__hash" aria-hidden="true">## </span>
+      IA
+    </span>
+    <p class="work__text">
+      Claude, Gemini y ChatGPT a diario, pero GLM, Kimi, Deepseek y Qwen están
+      más arriba de lo que la gente cree. Uso lo que funciona, no lo que toca.
+    </p>
+  </div>
+
+  <div class="work__block">
+    <span class="work__title">
+      <span class="work__hash" aria-hidden="true">## </span>
+      Seguridad
+    </span>
+    <p class="work__text">
+      Rol defensivo: parcheo antes de que alguien llame a la puerta. <code
+        >fail2ban</code
+      > es tu amigo, y el que no lo use, ya aprenderá.
+    </p>
+  </div>
+
+  <div class="work__block">
+    <span class="work__title">
+      <span class="work__hash" aria-hidden="true">## </span>
+      Markdown
+    </span>
+    <p class="work__text">
+      Se ha convertido en el idioma de la IA. Si le hablas en <code>.md</code
+      >, te entiende mejor.
+    </p>
+  </div>
+</div>
+
+<figure class="work__figure">
+  <div class="work__window">
+    <div class="work__bar">
+      <span class="work__dots" aria-hidden="true">
+        <i class="dot dot--red"></i><i class="dot dot--yellow"></i
+        ><i class="dot dot--green"></i>
+      </span>
+      <span class="work__file">~/fotos/debian_2025.webp</span>
+    </div>
+    <img
+      src="/images/debian_2025.webp"
+      alt="Portátil Lenovo V14 ejecutando Debian"
+      width="1280"
+      height="767"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <figcaption class="work__caption"
+    ><span class="work__hash" aria-hidden="true">#</span> Lenovo V14 con Debian.
+    Uno de mis ordenadores de batalla. Sí, en plural.</figcaption
+  >
+</figure>
+
+<style>
+  .work__blocks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 0 48px;
+  }
+
+  .work__block {
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .work__title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .work__hash {
+    color: var(--a);
+  }
+
+  .work__text {
+    margin: 0;
+    color: var(--mut);
+    text-wrap: pretty;
+  }
+
+  .work__figure {
+    margin: 16px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .work__window {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--bg2);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  }
+
+  .work__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .work__dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .work__dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot--red {
+    background: #ff5f57;
+  }
+
+  .dot--yellow {
+    background: #febc2e;
+  }
+
+  .dot--green {
+    background: #28c840;
+  }
+
+  .work__file {
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--mut);
+  }
+
+  .work__window img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 640px;
+    object-fit: cover;
+  }
+
+  .work__caption {
+    font-size: 15px;
+    color: var(--mut);
+  }
+</style>

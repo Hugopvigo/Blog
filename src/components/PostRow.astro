@@ -15,9 +15,10 @@ export interface Props {
   post: CollectionEntry<"blog">;
   number?: string;
   variant: "home" | "list" | "related";
+  hidden?: boolean;
 }
 
-const { post, number, variant } = Astro.props;
+const { post, number, variant, hidden = false } = Astro.props;
 const { title, tag, date } = post.data;
 const href = postHref(post);
 const formatted = formatDate(date);
@@ -35,6 +36,7 @@ const external = post.data.external === true;
   data-year={date.getFullYear()}
   target={external ? "_blank" : undefined}
   rel={external ? "noopener noreferrer" : undefined}
+  hidden={hidden}
 >
   {number && <span class="post-row__number">{number}</span>}
 
@@ -154,8 +156,25 @@ const external = post.data.external === true;
     display: none;
   }
 
+  .post-row:hover,
+  .post-row:focus-visible {
+    background: var(--a);
+    color: var(--inv);
+  }
+
+  .post-row:focus-visible {
+    outline: 2px solid var(--a);
+    outline-offset: 2px;
+  }
+
+  .post-row:hover .post-row__tag,
+  .post-row:focus-visible .post-row__tag {
+    color: var(--inv);
+  }
+
   @media (hover: hover) and (min-width: 900px) {
-    .post-row__peek {
+    .post-row:hover .post-row__peek,
+    .post-row:focus-visible .post-row__peek {
       display: block;
       position: absolute;
       right: 18%;

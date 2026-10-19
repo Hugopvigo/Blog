@@ -1,0 +1,92 @@
+---
+const words = [
+  "IA",
+  "Producto",
+  "Telco",
+  "Linux",
+  "Python",
+  "Bash",
+  "fail2ban",
+  "Markdown",
+  "Debian",
+];
+---
+
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker">
+    <div class="ticker__track">
+      {
+        [0, 1].map(() => (
+          <span class="ticker__group">
+            {words.map((word) => (
+              <>
+                <span class="ticker__word">{word}</span>
+                <span class="ticker__sep">//</span>
+              </>
+            ))}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  /* El envoltorio recorta la cinta girada: sin él, la banda se sale del
+     documento y aparece scroll horizontal en móvil. */
+  .ticker-wrap {
+    overflow: clip;
+    padding-block: 8px;
+  }
+
+  .ticker {
+    background: var(--b);
+    color: var(--inv);
+    overflow: hidden;
+    padding: 14px 0;
+    transform: rotate(-1deg);
+    margin: 0 -20px;
+  }
+
+  .ticker__track {
+    display: flex;
+    width: max-content;
+    white-space: nowrap;
+    animation: ticker-move 36s linear infinite;
+  }
+
+  /* El relleno final hace que el salto de -50 % sea exacto y la cinta no
+     dé un tirón al repetir. */
+  .ticker__group {
+    display: flex;
+    gap: 32px;
+    padding-right: 32px;
+  }
+
+  .ticker__word {
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  .ticker__sep {
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  @keyframes ticker-move {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track {
+      animation: none;
+    }
+  }
+</style>

@@ -1,15 +1,185 @@
 ---
 import PageMeta from "../components/PageMeta.astro";
 import PageLayout from "../layouts/PageLayout.astro";
-import Intro from "../components/Intro.astro";
-import About from "../components/About.astro";
-import { SITE_TITLE } from "../config";
+import Prompt from "../components/Prompt.astro";
+import FilterPills from "../components/FilterPills.astro";
+import PostRow from "../components/PostRow.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import Hero from "../components/home/Hero.astro";
+import Ticker from "../components/home/Ticker.astro";
+import FeaturedPost from "../components/home/FeaturedPost.astro";
+import HowIWork from "../components/home/HowIWork.astro";
+import { BLOG_TAGS, SITE_TITLE } from "../config";
+import {
+  getPublishedPosts,
+  getPublishedProjects,
+  postNumber,
+} from "../lib/content-utils";
+
+const posts = await getPublishedPosts();
+const projects = await getPublishedProjects();
+
+// Destacado: el post con featured: true o, si no hay ninguno, el último
+// publicado (D1).
+const featured = posts.find((post) => post.data.featured) ?? posts[0];
+const featuredProjects = projects
+  .filter((project) => project.data.featured)
+  .slice(0, 3);
+
+// Solo los tags que tienen algún post publicado, en el orden de BLOG_TAGS.
+const usedTags = BLOG_TAGS.filter((tag) =>
+  posts.some((post) => post.data.tag === tag)
+);
+const tagOptions = [
+  { value: "*", label: "*" },
+  ...usedTags.map((tag) => ({ value: tag, label: tag.toLowerCase() })),
+];
 ---
 
-<PageLayout>
-  <PageMeta title={`${SITE_TITLE} | IA, Producto, Telco y Linux`} slot="meta" pagePath="/" />
-  <Fragment slot="main">
-    <Intro />
-    <About />
-  </Fragment>
+<PageLayout promptPath="~">
+  <PageMeta
+    title={`${SITE_TITLE} | IA, Producto, Telco y Linux`}
+    slot="meta"
+    pagePath="/"
+  />
+
+  <Hero slot="main" />
+  <Ticker slot="main" />
+
+  <section slot="main" class="section">
+    <FeaturedPost post={featured} />
+  </section>
+
+  <section slot="main" id="blog" class="section section--posts" data-filter-root data-filter-limit="5">
+    <div class="section__head">
+      <Prompt
+        >ls -t ~/blog --tag=<span class="text-a" data-filter-label>*</span> | head
+        -5</Prompt
+      >
+      <h2 class="section__title">artículos/</h2>
+    </div>
+
+    <FilterPills label="Filtrar artículos por etiqueta" options={tagOptions} />
+
+    <div class="posts">
+      {
+        posts.map((post, index) => (
+          <PostRow
+            post={post}
+            number={postNumber(index, posts.length)}
+            variant="home"
+            hidden={index >= 5}
+          />
+        ))
+      }
+    </div>
+
+    <a class="cd-button" href="/blog">
+      <span>cd ~/blog</span>
+      <span class="cd-button__note"># ver los {posts.length} artículos</span>
+      <span aria-hidden="true">→</span>
+    </a>
+  </section>
+
+  <section slot="main" class="section">
+    <div class="section__head">
+      <Prompt>cat como-trabajo.md</Prompt>
+      <h2 class="section__title"># cómo trabajo</h2>
+    </div>
+    <HowIWork />
+  </section>
+
+  <section slot="main" id="proyectos" class="section section--last">
+    <div class="section__head">
+      <Prompt
+        >ls ~/proyectos --destacados <span class="text-mut"># de noche</span></Prompt
+      >
+      <h2 class="section__title">proyectos/</h2>
+    </div>
+
+    <div class="projects">
+      {featuredProjects.map((project) => <ProjectCard project={project} />)}
+    </div>
+
+    <a class="cd-button" href="/projects">
+      <span>cd ~/proyectos</span>
+      <span class="cd-button__note"># ver los {projects.length}</span>
+      <span aria-hidden="true">→</span>
+    </a>
+  </section>
 </PageLayout>
+
+<script>
+  import { initFilterLists } from "../scripts/filter-list";
+  initFilterLists();
+</script>
+
+<style>
+  .section {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(64px, 9vw, 112px) clamp(20px, 4vw, 40px) 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .section--last {
+    padding-bottom: clamp(64px, 9vw, 112px);
+  }
+
+  .section--posts {
+    gap: 28px;
+  }
+
+  .section__head {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .section__title {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 1;
+    letter-spacing: -0.05em;
+  }
+
+  /* La lista sangra hasta el borde de la página. */
+  .posts {
+    margin: 0 calc(-1 * clamp(20px, 4vw, 40px));
+    border-top: 1px solid var(--line);
+  }
+
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+  }
+
+  .cd-button {
+    align-self: flex-start;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--a);
+    text-decoration: none;
+    padding: 10px 18px;
+    border: 1px solid var(--a);
+    border-radius: 999px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .cd-button:hover {
+    background: var(--a);
+    color: var(--inv);
+  }
+
+  .cd-button__note {
+    opacity: 0.7;
+    font-weight: 400;
+  }
+</style>
