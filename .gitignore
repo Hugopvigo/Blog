@@ -1,6 +1,7 @@
 # build output
 dist/
 dist.prev/
+dist.prev.prev/
 
 # dependencies
 node_modules/
