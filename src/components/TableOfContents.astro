@@ -12,7 +12,7 @@ const visible = headings.filter((h) => h.depth <= 3);
 {
   visible.length >= 2 && (
     <nav class="toc" aria-label="Tabla de contenidos">
-      <p class="toc-title">Contenidos</p>
+      <p class="toc-title">// contenidos</p>
       <ol class="toc-list">
         {visible.map((h) => (
           <li style={`padding-left: ${(h.depth - 1) * 0.75}rem`}>
@@ -46,12 +46,12 @@ const visible = headings.filter((h) => h.depth <= 3);
   }
 
   .toc-title {
-    font-weight: 700;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--color-text-muted, #888);
-    margin: 0 0 0.6rem 0;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--mut);
+    margin: 0 0 0.8rem 0;
   }
 
   .toc-list {
@@ -68,7 +68,7 @@ const visible = headings.filter((h) => h.depth <= 3);
   }
 
   .toc-link {
-    color: var(--color-text-muted, #888);
+    color: var(--mut);
     text-decoration: none;
     display: block;
     transition: color 0.15s;
@@ -77,13 +77,13 @@ const visible = headings.filter((h) => h.depth <= 3);
   }
 
   .toc-link:hover {
-    color: var(--color-text-link, #0ea5e9);
+    color: var(--a);
   }
 
   .toc-link.active {
-    color: var(--color-text-link, #0ea5e9);
-    border-left-color: currentColor;
-    font-weight: 600;
+    color: var(--a);
+    border-left-color: var(--a);
+    font-weight: 700;
   }
 </style>
 

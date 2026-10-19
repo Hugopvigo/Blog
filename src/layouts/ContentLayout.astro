@@ -2,50 +2,258 @@
 import PageLayout from "./PageLayout.astro";
 import TableOfContents from "../components/TableOfContents.astro";
 import BackToTop from "../components/BackToTop.astro";
-import { SITE_LANG, formatDate } from "../config";
-import type { Heading } from "../lib/content-utils";
+import PostRow from "../components/PostRow.astro";
+import Snippet from "../components/Snippet.astro";
+import Prompt from "../components/Prompt.astro";
+import { formatDate, SITE_URL } from "../config";
+import {
+  postSlug,
+  resolveSnippet,
+  type Heading,
+} from "../lib/content-utils";
+import type { CollectionEntry } from "astro:content";
 
 export interface Props {
-  title: string;
-  date: Date;
-  slug?: string;
-  readingTime?: number;
-  headings?: Heading[];
+  entry: CollectionEntry<"blog">;
+  readingTime: number;
+  headings: Heading[];
+  related: CollectionEntry<"blog">[];
 }
 
-const { title, date, slug, readingTime, headings = [] } = Astro.props;
-const formattedDate = formatDate(date);
+const { entry, readingTime, headings, related } = Astro.props;
+const { title, description, tag, date } = entry.data;
+const slug = postSlug(entry);
+const canonical = new URL(`/blog/${slug}`, SITE_URL).toString();
+const formatted = formatDate(date);
+const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+  canonical
+)}&text=${encodeURIComponent(title)}`;
 ---
 
 <PageLayout promptPath="~/blog" progress>
   <slot name="meta" slot="meta" />
-  <section slot="main" class="blog-post prose max-w-none prose-bubblegum">
-    <a
-      href="/blog"
-      class="unset not-prose flex items-center gap-1.5 text-mut text-sm transition-colors duration-150 mb-8 w-fit"
-    >
-      <span aria-hidden="true">←</span>
-      <span>Volver al blog</span>
-    </a>
-    <h1 class="m-0 mb-[0.25em]">
-      <span class="
-        pl-6 relative block leading-[150%]
-        after:absolute after:content-[''] after:w-2 after:h-full after:top-0 after:left-0 after:bg-primary-green
-      ">
-        {title}
-      </span>
-    </h1>
-    <div class="not-prose flex items-center gap-2 mb-[2em] text-text-muted text-sm">
-      <time>{formattedDate}</time>
-      {readingTime && (
-        <>
+
+  <Fragment slot="main">
+    <article class="post">
+      <header class="post__head">
+        <a class="post__back" href="/blog"
+          ><span class="post__dollar" aria-hidden="true">$</span> cd ../blog ←</a
+        >
+
+        <div class="post__meta">
+          {
+            tag && (
+              <a class="post__tag" href={`/blog?tag=${tag}`}>
+                #{tag.toLowerCase()}
+              </a>
+            )
+          }
+          <span>{formatted}</span>
           <span aria-hidden="true">·</span>
           <span>{readingTime} min de lectura</span>
-        </>
-      )}
-    </div>
-    <slot name="content" />
-  </section>
+        </div>
+
+        <h1 class="post__title">
+          {title}<span class="post__underscore" aria-hidden="true">_</span>
+        </h1>
+
+        {description && <p class="post__lead">{description}</p>}
+      </header>
+
+      <div class="post__snippet">
+        <Snippet snippet={resolveSnippet(entry)} size="lg" />
+      </div>
+
+      <div class="post__body prose article-body">
+        <slot name="content" />
+      </div>
+
+      <footer class="post__foot">
+        <span>— Hugo Perez-Vigo</span>
+        <div class="post__actions">
+          <a
+            href={tweetUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="post__action">compartir en twitter</a
+          >
+          <button
+            type="button"
+            class="post__action post__copy"
+            data-copy-link
+            data-url={canonical}>copiar enlace</button
+          >
+        </div>
+      </footer>
+    </article>
+
+    <section class="more">
+      <Prompt
+        >ls ~/blog --tag={tag ? tag.toLowerCase() : "*"} <span class="text-mut"
+          ># sigue leyendo</span
+        ></Prompt
+      >
+      <div class="more__list">
+        {related.map((post) => <PostRow post={post} variant="related" />)}
+      </div>
+    </section>
+  </Fragment>
+
   <TableOfContents headings={headings} slot="fixed" />
   <BackToTop slot="fixed" />
 </PageLayout>
+
+<style>
+  .post__head {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: clamp(40px, 7vw, 88px) clamp(20px, 4vw, 40px)
+      clamp(32px, 5vw, 56px);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .post__back {
+    align-self: flex-start;
+    font-size: 14px;
+    color: var(--mut);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .post__back:hover {
+    color: var(--a);
+  }
+
+  .post__dollar {
+    color: var(--b);
+  }
+
+  .post__meta {
+    display: flex;
+    gap: 10px 18px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 14px;
+    color: var(--mut);
+  }
+
+  .post__tag {
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: var(--a);
+    color: var(--inv);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .post__title {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(40px, 6.4vw, 88px);
+    line-height: 1;
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+  }
+
+  .post__underscore {
+    color: var(--a);
+  }
+
+  .post__lead {
+    margin: 0;
+    max-width: 40ch;
+    font-family: var(--font-sans);
+    font-size: clamp(20px, 2vw, 24px);
+    line-height: 1.45;
+    color: var(--mut);
+    text-wrap: pretty;
+  }
+
+  .post__snippet {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px);
+  }
+
+  .post__body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: clamp(40px, 6vw, 72px) clamp(20px, 4vw, 40px) 0;
+  }
+
+  .post__foot {
+    max-width: 720px;
+    margin: clamp(48px, 7vw, 80px) auto 0;
+    padding: 24px clamp(20px, 4vw, 40px) 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--mut);
+  }
+
+  .post__actions {
+    display: flex;
+    gap: 16px;
+  }
+
+  .post__action {
+    font: inherit;
+    color: var(--fg);
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .post__action:hover {
+    color: var(--a);
+  }
+
+  .more {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(64px, 9vw, 112px) clamp(20px, 4vw, 40px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .more__list {
+    border-top: 1px solid var(--line);
+    margin: 0 calc(-1 * clamp(20px, 4vw, 40px));
+  }
+</style>
+
+<script>
+  function initCopyLink() {
+    const btn = document.querySelector<HTMLButtonElement>("[data-copy-link]");
+    if (!btn) return;
+    if (btn.dataset.copyBound) return;
+    btn.dataset.copyBound = "1";
+
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.url ?? window.location.href);
+        btn.textContent = "✓ copiado";
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          btn.textContent = "copiar enlace";
+        }, 1600);
+      } catch (e) {
+        /* sin permiso de portapapeles: no se cambia la etiqueta. */
+      }
+    });
+  }
+
+  document.addEventListener("astro:page-load", initCopyLink);
+</script>

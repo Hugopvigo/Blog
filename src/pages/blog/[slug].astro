@@ -8,6 +8,7 @@ import {
   getReadingTime,
   extractHeadings,
   postSlug,
+  relatedPosts,
 } from "../../lib/content-utils";
 
 export async function getStaticPaths() {
@@ -27,13 +28,21 @@ const slug = postSlug(entry);
 const readingTime = getReadingTime(entry.body ?? "");
 const headings = extractHeadings(entry.body ?? "");
 
+const posts = await getPublishedPosts();
+const related = relatedPosts(entry, posts, 3);
+
 const ogImageAbsoluteUrl =
   frontmatter.external !== true && frontmatter.ogImagePath
     ? new URL(frontmatter.ogImagePath, SITE_URL).toString()
     : undefined;
 ---
 
-<ContentLayout title={frontmatter.title} date={frontmatter.date} slug={slug} readingTime={readingTime} headings={headings}>
+<ContentLayout
+  entry={entry}
+  readingTime={readingTime}
+  headings={headings}
+  related={related}
+>
   <BlogPostMeta
     title={frontmatter.title}
     description={frontmatter.external ? undefined : frontmatter.description}

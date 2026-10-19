@@ -8,24 +8,20 @@ interface Props {
 
 const { level, id } = Astro.props;
 const Tag = `h${level}` as HTMLTag;
-const shouldAddBeforePseudoStyle = level <= 2;
+// Prefijo de terminal: «##» para los h2, «###» para los h3… (el espacio lo
+// pone el salto de línea de la plantilla).
+const prefix = level >= 2 ? "#".repeat(level) : "";
 ---
 
-<Tag id={id} class="group flex">
-  {
-    shouldAddBeforePseudoStyle ? (
-      <span
-        class="
-          pl-6 relative block leading-[150%]
-          before:absolute before:content-[''] before:w-2 before:h-full before:top-0 before:left-0 before:bg-primary-green
-        "
-      >
-        <slot />
-      </span>
-    ) : (
-      <span class="relative block leading-[150%]">
-        <slot />
-      </span>
-    )
-  }
+<Tag id={id} class="post-heading">
+  {prefix && <span class="post-heading__prefix" aria-hidden="true">{prefix}</span>}
+  <slot />
 </Tag>
+
+<style>
+  /* La tipografía de los encabezados la fija el cuerpo del artículo
+     (`.article-body`), aquí solo el prefijo. */
+  .post-heading__prefix {
+    color: var(--a);
+  }
+</style>

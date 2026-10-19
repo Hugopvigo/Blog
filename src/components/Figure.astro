@@ -36,6 +36,11 @@ const file = src.split("/").pop() ?? src;
   .term-figure {
     display: block;
     margin: 32px 0;
+    /* En el artículo, la figura se sale de la columna de 720 px: el ancho y
+       el centrado los fija el cuerpo (`.article-body`). */
+    width: var(--figure-width, auto);
+    margin-left: var(--figure-margin-left, 0);
+    transform: var(--figure-transform, none);
   }
 
   .term-figure__window {
