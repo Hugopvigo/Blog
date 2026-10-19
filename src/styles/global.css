@@ -28,6 +28,19 @@
   --code-s: #c8f25c;
   --code-c: #6e7189;
   --code-n: #ff9a76;
+
+  /*
+    El título de la ventana y los comentarios se leen sobre --code-bg. Con el
+    gris de la paleta se quedan en 3,85:1 (por debajo del 4,5:1 de AA), así
+    que se aclaran mezclándolos con el texto del código. La paleta no cambia:
+    esto es una mezcla de dos colores que ya estaban.
+  */
+  --code-title-aa: color-mix(in srgb, var(--code-title) 75%, var(--code-fg));
+  --code-c-aa: color-mix(in srgb, var(--code-c) 75%, var(--code-fg));
+
+  /* El acento sobre superficies --bg2 necesita algo más de contraste en modo
+     claro (4,19:1 tal cual): se oscurece mezclándolo con el texto. */
+  --a-surface: color-mix(in srgb, var(--a) 90%, var(--fg));
 }
 
 :root.dark {
@@ -222,7 +235,7 @@
 .term-code .token.prolog,
 .term-code .token.doctype,
 .term-code .token.cdata {
-  color: var(--code-c);
+  color: var(--code-c-aa);
   font-style: normal;
 }
 

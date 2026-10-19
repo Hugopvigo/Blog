@@ -45,4 +45,16 @@ const { snippet, size = "md", class: className, ...rest } = Astro.props;
     line-height: 1.8;
     overflow-x: auto;
   }
+
+  /*
+    En móvil, un fragmento que se corta a media línea queda mal: se deja
+    desplazable en horizontal en lugar de esconderlo.
+  */
+  @media (max-width: 620px) {
+    .snippet__code--sm,
+    .snippet__code--md {
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+  }
 </style>

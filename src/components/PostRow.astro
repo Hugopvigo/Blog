@@ -88,12 +88,12 @@ const external = post.data.external === true;
 
   .post-row--list {
     grid-template-columns: minmax(0, 1fr) auto;
-    padding: clamp(14px, 1.8vw, 20px) 0;
+    padding: clamp(18px, 2.4vw, 26px) clamp(20px, 4vw, 40px);
   }
 
   .post-row--related {
     grid-template-columns: minmax(0, 1fr) auto;
-    padding: 14px 0;
+    padding: clamp(18px, 2.4vw, 26px) clamp(20px, 4vw, 40px);
   }
 
   .post-row__number {
@@ -154,6 +154,45 @@ const external = post.data.external === true;
   /* La previsualización solo existe con ratón y pantalla ancha. */
   .post-row__peek {
     display: none;
+  }
+
+  /*
+    En móvil la fila se apila: el título a todo el ancho y los metadatos
+    debajo. Con las tres columnas en paralelo el título se parte en cinco
+    líneas y la fecha se sale de la pantalla.
+  */
+  @media (max-width: 620px) {
+    .post-row--home {
+      grid-template-columns: 48px minmax(0, 1fr);
+      row-gap: 4px;
+    }
+
+    .post-row--list,
+    .post-row--related {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 4px;
+    }
+
+    .post-row--home .post-row__aside,
+    .post-row--list .post-row__aside,
+    .post-row--related .post-row__aside {
+      grid-column: 2;
+      text-align: left;
+      flex-direction: row;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .post-row--list .post-row__aside,
+    .post-row--related .post-row__aside {
+      grid-column: 1;
+    }
+
+    .post-row--home .post-row__title,
+    .post-row--list .post-row__title,
+    .post-row--related .post-row__title {
+      max-width: none;
+    }
   }
 
   .post-row:hover,
