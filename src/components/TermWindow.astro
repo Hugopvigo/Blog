@@ -1,0 +1,108 @@
+---
+export interface Props {
+  title: string;
+  variant?: "code" | "surface";
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const { title, variant = "code", size = "md", class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    "term-window",
+    `term-window--${variant}`,
+    `term-window--${size}`,
+    className,
+  ]}
+>
+  <div class="term-window__bar">
+    <span class="term-window__dots" aria-hidden="true">
+      <i class="dot dot--red"></i><i class="dot dot--yellow"></i
+      ><i class="dot dot--green"></i>
+    </span>
+    <span class="term-window__title">{title}</span>
+  </div>
+  <div class="term-window__body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .term-window {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  .term-window--code {
+    background: var(--code-bg);
+    border-color: var(--code-line);
+  }
+
+  .term-window--surface {
+    background: var(--bg2);
+  }
+
+  .term-window--lg {
+    border-radius: 14px;
+  }
+
+  .term-window__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 13px;
+    border-bottom: 1px solid var(--code-line);
+  }
+
+  .term-window--surface .term-window__bar {
+    border-bottom-color: var(--line);
+  }
+
+  .term-window__dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .term-window__dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .term-window--sm .term-window__dots .dot {
+    width: 9px;
+    height: 9px;
+  }
+
+  .dot--red {
+    background: #ff5f57;
+  }
+
+  .dot--yellow {
+    background: #febc2e;
+  }
+
+  .dot--green {
+    background: #28c840;
+  }
+
+  .term-window__title {
+    margin-left: 6px;
+    font-size: 12px;
+    color: var(--code-title);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .term-window--surface .term-window__title {
+    color: var(--mut);
+  }
+
+  .term-window--sm .term-window__title {
+    font-size: 11px;
+  }
+</style>

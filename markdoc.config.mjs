@@ -69,6 +69,14 @@ export default defineMarkdocConfig({
     },
   },
   nodes: {
+    image: {
+      render: component("./src/components/Figure.astro"),
+      attributes: {
+        src: { type: String, required: true },
+        alt: { type: String },
+        title: { type: String },
+      },
+    },
     heading: {
       render: component("./src/components/Heading.astro"),
       attributes: {

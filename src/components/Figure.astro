@@ -1,0 +1,103 @@
+---
+export interface Props {
+  src: string;
+  alt?: string;
+  title?: string;
+}
+
+const { src, alt = "", title } = Astro.props;
+const file = src.split("/").pop() ?? src;
+---
+
+<span class="term-figure">
+  <span class="term-figure__window">
+    <span class="term-figure__bar">
+      <span class="term-figure__dots" aria-hidden="true">
+        <i class="dot dot--red"></i><i class="dot dot--yellow"></i
+        ><i class="dot dot--green"></i>
+      </span>
+      <span class="term-figure__title">~/imagenes/{file}</span>
+    </span>
+    <img src={src} alt={alt} loading="lazy" decoding="async" />
+  </span>
+  {
+    title && (
+      <span class="term-figure__caption">
+        <span class="term-figure__hash" aria-hidden="true"># </span>
+        {title}
+      </span>
+    )
+  }
+</span>
+
+<style>
+  /* Markdoc mete la imagen dentro de un <p>: solo se pueden usar elementos en
+     línea, con display:block para que se comporten como bloques. */
+  .term-figure {
+    display: block;
+    margin: 32px 0;
+  }
+
+  .term-figure__window {
+    display: block;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--bg2);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  }
+
+  .term-figure__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .term-figure__dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .term-figure__dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot--red {
+    background: #ff5f57;
+  }
+
+  .dot--yellow {
+    background: #febc2e;
+  }
+
+  .dot--green {
+    background: #28c840;
+  }
+
+  .term-figure__title {
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--mut);
+  }
+
+  .term-figure__window img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .term-figure__caption {
+    display: block;
+    margin-top: 12px;
+    font-size: 15px;
+    color: var(--mut);
+  }
+
+  .term-figure__hash {
+    color: var(--b);
+  }
+</style>

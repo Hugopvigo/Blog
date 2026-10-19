@@ -164,3 +164,67 @@
   margin-inline: auto;
   padding-inline: clamp(20px, 4vw, 40px);
 }
+
+/*
+  Colores de los tokens de Prism. Sustituye al tema Coldark de la plantilla:
+  una sola hoja, acotada a .term-code (los bloques de código y los fragmentos).
+*/
+.term-code {
+  color: var(--code-fg);
+  font-family: var(--font-mono);
+}
+
+.term-code pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  overflow: visible;
+}
+
+.term-code code {
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: inherit;
+}
+
+.term-code .token.keyword,
+.term-code .token.builtin,
+.term-code .token.selector,
+.term-code .token.important,
+.term-code .token.atrule,
+.term-code .token.tag,
+.term-code .token.property {
+  color: var(--code-k);
+}
+
+.term-code .token.string,
+.term-code .token.attr-value,
+.term-code .token.url,
+.term-code .token.char,
+.term-code .token.regex {
+  color: var(--code-s);
+}
+
+.term-code .token.comment,
+.term-code .token.prolog,
+.term-code .token.doctype,
+.term-code .token.cdata {
+  color: var(--code-c);
+  font-style: normal;
+}
+
+.term-code .token.number,
+.term-code .token.boolean,
+.term-code .token.constant,
+.term-code .token.variable,
+.term-code .token.operator,
+.term-code .token.function {
+  color: var(--code-n);
+}

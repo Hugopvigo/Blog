@@ -1,0 +1,41 @@
+---
+import { Prism } from "@astrojs/prism";
+import TermWindow from "./TermWindow.astro";
+
+export interface Props {
+  snippet: { file: string; lang: string; code: string };
+  size?: "sm" | "md" | "lg";
+}
+
+const { snippet, size = "md" } = Astro.props;
+---
+
+<TermWindow title={snippet.file} variant="code" size={size}>
+  <div class:list={["term-code", "snippet__code", `snippet__code--${size}`]}>
+    <Prism lang={snippet.lang} code={snippet.code} />
+  </div>
+</TermWindow>
+
+<style>
+  .snippet__code {
+    white-space: pre;
+  }
+
+  .snippet__code--sm {
+    font-size: 13px;
+    line-height: 1.7;
+    overflow: hidden;
+  }
+
+  .snippet__code--md {
+    font-size: 14px;
+    line-height: 1.75;
+    overflow: hidden;
+  }
+
+  .snippet__code--lg {
+    font-size: 15px;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+</style>
