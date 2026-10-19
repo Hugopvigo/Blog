@@ -5,12 +5,19 @@ import TermWindow from "./TermWindow.astro";
 export interface Props {
   snippet: { file: string; lang: string; code: string };
   size?: "sm" | "md" | "lg";
+  class?: string;
 }
 
-const { snippet, size = "md" } = Astro.props;
+const { snippet, size = "md", class: className, ...rest } = Astro.props;
 ---
 
-<TermWindow title={snippet.file} variant="code" size={size}>
+<TermWindow
+  title={snippet.file}
+  variant="code"
+  size={size}
+  class={className}
+  {...rest}
+>
   <div class:list={["term-code", "snippet__code", `snippet__code--${size}`]}>
     <Prism lang={snippet.lang} code={snippet.code} />
   </div>

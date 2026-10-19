@@ -6,7 +6,13 @@ export interface Props {
   class?: string;
 }
 
-const { title, variant = "code", size = "md", class: className } = Astro.props;
+const {
+  title,
+  variant = "code",
+  size = "md",
+  class: className,
+  ...rest
+} = Astro.props;
 ---
 
 <div
@@ -16,6 +22,7 @@ const { title, variant = "code", size = "md", class: className } = Astro.props;
     `term-window--${size}`,
     className,
   ]}
+  {...rest}
 >
   <div class="term-window__bar">
     <span class="term-window__dots" aria-hidden="true">
