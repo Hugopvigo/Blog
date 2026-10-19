@@ -8,9 +8,9 @@ interface Props {
 
 const { level, id } = Astro.props;
 const Tag = `h${level}` as HTMLTag;
-// Prefijo de terminal: «##» para los h2, «###» para los h3… (el espacio lo
-// pone el salto de línea de la plantilla).
-const prefix = level >= 2 ? "#".repeat(level) : "";
+// Prefijo de terminal: «## » para los h2, «### » para los h3… (el espacio va
+// dentro del prefijo: Astro quita el salto de línea de la plantilla).
+const prefix = level >= 2 ? `${"#".repeat(level)} ` : "";
 ---
 
 <Tag id={id} class="post-heading">
