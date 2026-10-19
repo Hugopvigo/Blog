@@ -1,69 +1,238 @@
 ---
 import PageLayout from "../layouts/PageLayout.astro";
 import PageMeta from "../components/PageMeta.astro";
-import { SITE_TITLE, formatDate } from "../config";
-import { getPublishedPosts, postSlug } from "../lib/content-utils";
+import Prompt from "../components/Prompt.astro";
+import FilterPills from "../components/FilterPills.astro";
+import PostRow from "../components/PostRow.astro";
+import { BLOG_TAGS, SITE_TITLE } from "../config";
+import { getPublishedPosts } from "../lib/content-utils";
 
-const sortedPosts = await getPublishedPosts();
+const posts = await getPublishedPosts();
+
+// Años, del más reciente al más antiguo.
+const years = [...new Set(posts.map((post) => post.data.date.getFullYear()))].map(
+  (year) => ({
+    year,
+    posts: posts.filter((post) => post.data.date.getFullYear() === year),
+  })
+);
+
+// Solo los tags que tienen algún post publicado, en el orden de BLOG_TAGS.
+const usedTags = BLOG_TAGS.filter((tag) =>
+  posts.some((post) => post.data.tag === tag)
+);
+const tagOptions = [
+  { value: "*", label: "*" },
+  ...usedTags.map((tag) => ({ value: tag, label: tag.toLowerCase() })),
+];
 ---
 
-<PageLayout>
+<PageLayout promptPath="~/blog">
   <PageMeta title={`Blog | ${SITE_TITLE}`} slot="meta" pagePath="/blog" />
-  <section slot="main" class="pt-8">
-    <h2 class="font-bold text-text-muted text-xs tracking-[0.2em] uppercase mb-6">
-      Artículos
-    </h2>
-    <ul class="unset">
+
+  <header slot="main" class="head">
+    <Prompt>ls -la ~/blog <span class="text-mut"># {posts.length} artículos</span></Prompt>
+    <h1 class="head__title">artículos<span class="head__slash">/</span></h1>
+    <p class="head__lead">
+      IA aplicada, redes, seguridad y lo que voy aprendiendo por el camino. Sin
+      humo.
+    </p>
+  </header>
+
+  <div slot="main" class="blog" data-filter-root data-filter-param="tag">
+    <div class="bar">
+      <label class="search">
+        <span class="search__label">grep -i</span>
+        <input
+          type="search"
+          data-filter-search
+          placeholder="buscar artículo…"
+          aria-label="Buscar artículo"
+        />
+      </label>
+      <FilterPills
+        label="Filtrar artículos por etiqueta"
+        options={tagOptions}
+      />
+    </div>
+
+    <div class="list">
       {
-        sortedPosts.map((post) => {
-          const slug = postSlug(post);
-          const formattedDate = formatDate(post.data.date);
-          return (
-            <li class="[&>*]:p-0 border-b-2 border-line/10 last:border-b-0">
-              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 py-3 sm:py-4 group">
-                <div class="title">
-                  {post.data.external ? (
-                    <a
-                      href={post.data.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="unset
-                        transition-[background-size] duration-300
-                        bg-gradient-to-r bg-left-bottom bg-no-repeat
-                        bg-[length:0%_55%] hover:bg-[length:100%_55%] dark:bg-[length:0%_2px] hover:dark:bg-[length:100%_2px]
-                        from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
-                      "
-                    >
-                      <span>{post.data.title}</span>
-                      <span class="ml-1.5 text-[11px] opacity-60" aria-hidden="true"
-                        >↗</span
-                      >
-                    </a>
-                  ) : (
-                    <a
-                      href={`/blog/${slug}`}
-                      class="unset
-                        transition-[background-size] duration-300
-                        bg-gradient-to-r bg-left-bottom bg-no-repeat
-                        bg-[length:0%_55%] hover:bg-[length:100%_55%] dark:bg-[length:0%_2px] hover:dark:bg-[length:100%_2px]
-                        from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
-                      "
-                    >
-                      {post.data.title}
-                    </a>
-                  )}
-                </div>
-                <time
-                  datetime={post.data.date.toISOString()}
-                  class="text-text-muted text-sm tabular-nums shrink-0"
-                >
-                  {formattedDate}
-                </time>
-              </div>
-            </li>
-          );
-        })
+        years.map((group) => (
+          <section
+            class="year"
+            data-filter-group
+            data-singular="artículo"
+            data-plural="artículos"
+          >
+            <div class="year__head">
+              <h2 class="year__title">{group.year}</h2>
+              <span class="year__count" data-filter-count>
+                {group.posts.length}{" "}
+                {group.posts.length === 1 ? "artículo" : "artículos"}
+              </span>
+            </div>
+            <div class="year__list">
+              {group.posts.map((post) => (
+                <PostRow post={post} variant="list" />
+              ))}
+            </div>
+          </section>
+        ))
       }
-    </ul>
-  </section>
+
+      <div class="empty" data-filter-empty hidden>
+        <span>
+          <span class="empty__dollar" aria-hidden="true">$</span> grep -i "<span
+            data-filter-query></span
+          >" ~/blog/*
+        </span>
+        <span class="empty__note"
+          >(sin resultados — prueba con otra palabra)</span
+        >
+      </div>
+    </div>
+  </div>
 </PageLayout>
+
+<script>
+  import { initFilterLists } from "../scripts/filter-list";
+  initFilterLists();
+</script>
+
+<style>
+  .head {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(48px, 8vw, 104px) clamp(20px, 4vw, 40px) 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .head__title {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(48px, 8vw, 112px);
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+  }
+
+  .head__slash {
+    color: var(--a);
+  }
+
+  .head__lead {
+    margin: 0;
+    max-width: 56ch;
+    font-size: 17px;
+    color: var(--mut);
+    text-wrap: pretty;
+  }
+
+  .blog {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px) clamp(64px, 9vw, 112px);
+  }
+
+  /* La barra se pega bajo la cabecera solo en pantallas anchas. */
+  .bar {
+    display: flex;
+    gap: 16px 24px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 14px 0;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (min-width: 768px) {
+    .bar {
+      position: sticky;
+      top: var(--header-h, 62px);
+      z-index: 5;
+    }
+  }
+
+  .search {
+    flex: 1 1 280px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg2);
+  }
+
+  .search__label {
+    color: var(--b);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .search input {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 15px;
+    color: var(--fg);
+    background: transparent;
+    border: 0;
+    outline: none;
+  }
+
+  .search input::placeholder {
+    color: var(--mut);
+  }
+
+  .year {
+    padding-top: clamp(40px, 6vw, 72px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .year__head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .year__title {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(32px, 4vw, 52px);
+    letter-spacing: -0.05em;
+    line-height: 1;
+    color: var(--a);
+  }
+
+  .year__count {
+    font-size: 14px;
+    color: var(--mut);
+  }
+
+  .year__list {
+    border-top: 1px solid var(--line);
+    margin: 0 calc(-1 * clamp(20px, 4vw, 40px));
+  }
+
+  .empty {
+    padding: 72px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 17px;
+  }
+
+  .empty__dollar {
+    color: var(--b);
+  }
+
+  .empty__note {
+    color: var(--mut);
+  }
+</style>

@@ -37,6 +37,7 @@ export function initFilterLists(): void {
         root.querySelectorAll<HTMLElement>("[data-filter-group]")
       );
       const emptyEl = root.querySelector<HTMLElement>("[data-filter-empty]");
+      const queryEl = root.querySelector<HTMLElement>("[data-filter-query]");
       const shownEl = root.querySelector<HTMLElement>("[data-filter-shown]");
       const labelEl = root.querySelector<HTMLElement>("[data-filter-label]");
       const limit = Number(root.dataset.filterLimit ?? 0);
@@ -88,6 +89,7 @@ export function initFilterLists(): void {
         });
 
         if (emptyEl) emptyEl.hidden = visible > 0;
+        if (queryEl) queryEl.textContent = search ? search.value.trim() : "";
         if (shownEl) shownEl.textContent = `${shown} de ${total}`;
 
         pills.forEach((pill) => {
