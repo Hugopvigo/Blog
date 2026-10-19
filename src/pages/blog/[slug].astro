@@ -31,10 +31,16 @@ const headings = extractHeadings(entry.body ?? "");
 const posts = await getPublishedPosts();
 const related = relatedPosts(entry, posts, 3);
 
-const ogImageAbsoluteUrl =
-  frontmatter.external !== true && frontmatter.ogImagePath
-    ? new URL(frontmatter.ogImagePath, SITE_URL).toString()
-    : undefined;
+// La OG de cada post: la que venga en el frontmatter o, si no hay, la
+// primera imagen del cuerpo.
+const firstImage = (body: string): string | undefined =>
+  body.match(/!\[[^\]]*\]\(([^)\s]+)/)?.[1];
+
+const ogImagePath =
+  frontmatter.ogImagePath ?? firstImage(entry.body ?? "");
+const ogImageAbsoluteUrl = ogImagePath
+  ? new URL(ogImagePath, SITE_URL).toString()
+  : undefined;
 ---
 
 <ContentLayout
