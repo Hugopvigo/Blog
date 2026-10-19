@@ -4,24 +4,23 @@ This is not a layout but just a component that's used in layouts.
 */
 ---
 
-<script is:inline>
-function applyTheme() {
-  if (typeof window === "undefined") return;
-  var isSystemColorSchemeDark = window.matchMedia(
-    "(prefers-color-scheme: dark)"
-  ).matches;
-  var storageTheme = localStorage.getItem("theme");
-  var themeColorMeta = document.head.children.namedItem("theme-color");
-  if (!storageTheme && isSystemColorSchemeDark) {
-    document.documentElement.classList.add("dark");
-    if (themeColorMeta) themeColorMeta.content = "#0f172a";
-  } else if (storageTheme === "dark") {
-    document.documentElement.classList.add("dark");
-    if (themeColorMeta) themeColorMeta.content = "#0f172a";
-  } else {
-    if (themeColorMeta) themeColorMeta.content = "#ffffff";
+<script is:inline data-cfasync="false">
+  /*
+    Oscuro por defecto (D2): se pone .dark salvo que localStorage.theme sea
+    "light". El script va con data-cfasync="false" para que Cloudflare/Rocket
+    Loader no lo aplaze y se ejecute antes del primer pintado.
+  */
+  function applyTheme() {
+    try {
+      var stored = localStorage.getItem("theme");
+      var isDark = stored !== "light";
+      document.documentElement.classList.toggle("dark", isDark);
+      var meta = document.head.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", isDark ? "#0e1214" : "#eef2ef");
+    } catch (e) {
+      /* localStorage bloqueado: se deja el tema por defecto del HTML. */
+    }
   }
-}
-applyTheme();
-document.addEventListener("astro:after-swap", applyTheme);
+  applyTheme();
+  document.addEventListener("astro:after-swap", applyTheme);
 </script>

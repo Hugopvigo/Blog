@@ -4,76 +4,79 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
-  @theme inline tells Tailwind v4 to generate utilities that reference these
-  CSS variables at runtime (e.g. bg-bg-body → background-color: var(--color-bg-body)).
-  The actual values come from the theme classes below (.theme-bubblegum / .dark).
+  Paleta «Menta» del rediseño v2.
+  Los tokens viven en :root (modo claro) y :root.dark (modo oscuro). El
+  interruptor es la clase .dark en <html>, que pone ThemeScript. Oscuro por
+  defecto salvo que el usuario haya elegido claro (D2).
+*/
+:root {
+  --bg: #eef2ef;
+  --bg2: #e0e7e3;
+  --line: rgba(14, 18, 20, 0.14);
+  --fg: #0e1214;
+  --mut: #4f5d5a;
+  --a: #0f7a62;
+  --b: #8a5a00;
+  --inv: #eef2ef;
+
+  /* Las ventanas de código son siempre oscuras, con cualquier tema. */
+  --code-bg: #12131d;
+  --code-line: rgba(230, 229, 238, 0.1);
+  --code-title: #6e7189;
+  --code-fg: #e6e5ee;
+  --code-k: #b3a6ff;
+  --code-s: #c8f25c;
+  --code-c: #6e7189;
+  --code-n: #ff9a76;
+}
+
+:root.dark {
+  --bg: #0e1214;
+  --bg2: #151b1e;
+  --line: rgba(232, 240, 238, 0.12);
+  --fg: #e8f0ee;
+  --mut: #97a6a3;
+  --a: #7fdcc0;
+  --b: #f5c86b;
+  --inv: #0e1214;
+}
+
+/*
+  @theme inline hace que las utilidades de Tailwind 4 referencien estas
+  variables en tiempo de ejecución (bg-bg → background-color: var(--color-bg)).
 */
 @theme inline {
-  --font-body: "Space Grotesk", sans-serif;
-  --font-heading: "Space Grotesk", sans-serif;
-  --color-primary-blue: var(--_color-primary-blue);
-  --color-primary-green: var(--_color-primary-green);
-  --color-primary-yellow: var(--_color-primary-yellow);
-  --color-text-body: var(--_color-text-body);
-  --color-text-heading: var(--_color-text-heading);
-  --color-text-bold: var(--_color-text-bold);
-  --color-text-muted: var(--_color-text-muted);
-  --color-text-link: var(--_color-text-link);
-  --color-text-code: var(--_color-text-code);
-  --color-text-selection: var(--_color-text-selection);
-  --color-bg-body: var(--_color-bg-body);
-  --color-bg-code: var(--_color-bg-code);
-  --color-bg-selection: var(--_color-bg-selection);
-  --color-border-code: var(--_color-border-code);
-  --color-transparent: transparent;
-  --color-current: currentColor;
+  --color-bg: var(--bg);
+  --color-bg2: var(--bg2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-mut: var(--mut);
+  --color-a: var(--a);
+  --color-b: var(--b);
+  --color-inv: var(--inv);
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
 }
 
 @layer base {
-
-  .theme-bubblegum {
-    --_color-primary-blue: oklch(82% 0.1 200);
-    --_color-primary-green: oklch(93% 0.2 125);
-    --_color-primary-yellow: oklch(93% 0.15 95);
-    --_color-text-body: oklch(38% 0.08 295);
-    --_color-text-heading: oklch(38% 0.08 295);
-    --_color-text-bold: oklch(38% 0.08 295);
-    --_color-text-muted: oklch(49% 0.02 260);
-    --_color-text-link: oklch(71% 0.14 200);
-    --_color-text-code: oklch(0% 0 0);
-    --_color-text-selection: oklch(0% 0 0);
-    --_color-bg-body: oklch(100% 0 0);
-    --_color-bg-code: oklch(96% 0.04 85);
-    --_color-bg-selection: oklch(95% 0.2 125);
-    --_color-border-code: oklch(95% 0.03 60);
-  }
-
-  .theme-bubblegum.dark {
-    --_color-primary-blue: oklch(62% 0.19 260);
-    --_color-primary-green: oklch(93% 0.2 125);
-    --_color-primary-yellow: oklch(93% 0.15 95);
-    --_color-text-body: oklch(81% 0.02 260);
-    --_color-text-heading: oklch(100% 0 0);
-    --_color-text-bold: oklch(100% 0 0);
-    --_color-text-muted: oklch(72% 0.02 260);
-    --_color-text-link: oklch(74% 0.16 260);
-    --_color-text-code: oklch(100% 0 0);
-    --_color-text-selection: oklch(0% 0 0);
-    --_color-bg-body: oklch(22% 0.04 260);
-    --_color-bg-code: oklch(29% 0.04 260);
-    --_color-bg-selection: oklch(95% 0.2 125);
-    --_color-border-code: oklch(96% 0.04 95);
-  }
-
   :root {
-    font-family: var(--font-body);
-    background-color: var(--color-bg-body);
-    color: var(--color-text-body);
-    font-size: 1.125em;
-    line-height: 1.85;
+    font-family: var(--font-mono);
+    background-color: var(--bg);
+    color: var(--fg);
+    font-size: 16px;
+    line-height: 1.65;
     scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
     scrollbar-gutter: stable;
+    scroll-padding-top: calc(var(--header-h, 64px) + 16px);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px / 1.65 var(--font-mono);
+    /* clip (y no hidden) para no romper el sticky de la cabecera. */
+    overflow-x: clip;
+    transition: background 0.3s, color 0.3s;
   }
 
   h1,
@@ -82,48 +85,32 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-heading);
+    font-family: var(--font-mono);
+  }
+
+  a {
+    color: inherit;
+  }
+
+  a:hover {
+    color: var(--a);
+  }
+
+  ::selection {
+    background: var(--a);
+    color: var(--inv);
   }
 }
 
 @layer components {
-
-  strong {
-    font-weight: 600;
-    color: var(--color-text-bold);
-  }
-
-  mark {
-    background-color: var(--color-bg-selection);
-    color: var(--color-text-selection);
-  }
-
-  a:not(.unset) {
-    text-decoration: none;
-    background-repeat: no-repeat;
-    background-size: 100% 1.5px;
-    background-position: 0 100%;
-    background-image: linear-gradient(to right, var(--color-text-link), var(--color-text-link));
-  }
-
-  a:not(.unset):hover {
-    color: var(--color-text-link);
-  }
-
   code:not(pre code):not(.unset) {
-    background-color: var(--color-bg-code);
-    color: var(--color-text-code);
-    padding: 0.125rem 0.25rem;
-    border-radius: 0.25rem;
-    font-size: 0.875em;
-    font-weight: 600;
-    border: 1px solid var(--color-border-code);
-    margin-bottom: 1.25em;
-  }
-
-  :is(.dark code:not(pre code):not(.unset)) {
-    background-color: color-mix(in srgb, var(--_color-bg-code) 15%, transparent);
-    border-color: color-mix(in srgb, var(--_color-border-code) 15%, transparent);
+    font-family: var(--font-mono);
+    background-color: var(--bg2);
+    color: var(--fg);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    border: 1px solid var(--line);
   }
 
   ul:not(.unset):not(:where([class~="prose"] *)) {
@@ -131,141 +118,38 @@
     list-style: none;
   }
 
-  ul:not(.unset):not(:where([class~="prose"] *))>li {
+  ul:not(.unset):not(:where([class~="prose"] *)) > li {
     position: relative;
     padding-left: 1.375rem;
   }
 
-  ul:not(.unset):not(:where([class~="prose"] *))>li::before {
+  ul:not(.unset):not(:where([class~="prose"] *)) > li::before {
     position: absolute;
     left: 0;
     content: "\00bb";
-    color: var(--color-text-muted);
+    color: var(--mut);
   }
 
   ol:not(.unset):not(:where([class~="prose"] *)) {
     padding-left: 1.125rem;
   }
 
-  ol:not(.unset):not(:where([class~="prose"] *))>li::marker {
-    color: var(--color-text-muted);
+  ol:not(.unset):not(:where([class~="prose"] *)) > li::marker {
+    color: var(--mut);
   }
 
-  ul:not(.unset):not(:where([class~="prose"] *))>li,
-  ol:not(.unset):not(:where([class~="prose"] *))>li {
+  ul:not(.unset):not(:where([class~="prose"] *)) > li,
+  ol:not(.unset):not(:where([class~="prose"] *)) > li {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
-
-  ::selection {
-    background: var(--color-bg-selection);
-    color: var(--color-text-selection);
-  }
-
-  .animated-link {
-    position: relative;
-    box-decoration-break: clone;
-    text-decoration: none;
-  }
-
-  .animated-link:hover:after {
-    transform: translateZ(0) scale(1);
-  }
-
-  .animated-link:after {
-    left: 0;
-    right: 0;
-    bottom: -3px;
-    content: "";
-    height: 2px;
-    position: absolute;
-    transform: translateZ(0) scaleX(0);
-    transform-origin: left center;
-    transition: all .150s ease-in-out;
-    background-image: linear-gradient(to right, var(--color-text-link), var(--color-text-link));
-  }
-
-  .animated-link.show:after {
-    transform: translateZ(0) scale(1);
-  }
 }
 
-@layer utilities {
-  .prose-bubblegum {
-    --tw-prose-body: var(--color-text-body);
-    --tw-prose-headings: var(--color-text-heading);
-    --tw-prose-lead: var(--color-text-body);
-    --tw-prose-links: var(--color-text-body);
-    --tw-prose-bold: var(--color-text-bold);
-    --tw-prose-counters: var(--color-text-body);
-    --tw-prose-bullets: var(--color-text-body);
-    --tw-prose-hr: var(--color-text-muted);
-    --tw-prose-quotes: var(--color-text-body);
-    --tw-prose-quote-borders: var(--color-text-muted);
-    --tw-prose-captions: var(--color-text-heading);
-    --tw-prose-quote-captions: var(--color-text-heading);
-    --tw-prose-code: var(--color-text-code);
-    --tw-prose-pre-code: var(--color-text-code);
-    --tw-prose-pre-bg: var(--color-bg-code);
-    --tw-prose-th-borders: var(--color-text-muted);
-    --tw-prose-td-borders: var(--color-text-muted);
-  }
-
-  .prose-bubblegum :where(a) {
-    text-decoration: none;
-    background-repeat: no-repeat;
-    background-size: 100% 1.5px;
-    background-position: 0 100%;
-    background-image: linear-gradient(to right, var(--color-text-link), var(--color-text-link));
-  }
-
-  .prose-bubblegum :where(a):hover {
-    color: var(--color-text-link);
-  }
-
-  .prose-bubblegum :where(h1, h2, h3, h4, h5) {
-    color: var(--color-text-heading);
-  }
-
-  .prose-bubblegum :where(code)::before {
-    content: none;
-  }
-
-  .prose-bubblegum :where(code)::after {
-    content: none;
-  }
-
-  .prose-bubblegum :where(blockquote) {
-    border: none;
-    position: relative;
-    width: 96%;
-    margin: 0 auto;
-    font-size: 1.0625em;
-    padding-top: 1.5rem;
-    padding-bottom: 0.5rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  .prose-bubblegum :where(blockquote)::before {
-    font-family: Arial;
-    content: "\201c";
-    font-size: 4em;
-    color: var(--color-text-bold);
-    position: absolute;
-    left: -10px;
-    top: -10px;
-  }
-
-  .prose-bubblegum :where(blockquote)::after {
-    content: "";
-  }
-
-  .prose-bubblegum :where(blockquote p:first-of-type)::before {
-    content: "";
-  }
-
-  .prose-bubblegum :where(blockquote p:last-of-type)::after {
-    content: "";
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

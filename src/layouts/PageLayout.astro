@@ -9,7 +9,7 @@
 // Import the global.css file here so that it is included on
 import "../styles/global.css";
 
-import GoogleFont from "./GoogleFont.astro";
+import Fonts from "./Fonts.astro";
 import FontAwesome from "./FontAwesome.astro";
 import ThemeScript from "./ThemeScript.astro";
 import Favicon from "./Favicon.astro";
@@ -20,7 +20,7 @@ import { SITE_LANG } from "../config";
 ---
 
 <!DOCTYPE html>
-<html class="theme-bubblegum" lang={SITE_LANG}>
+<html class="dark" lang={SITE_LANG}>
   <head>
     <!-- Global Metadata -->
     <meta charset="utf-8" />
@@ -28,7 +28,7 @@ import { SITE_LANG } from "../config";
     <meta name="generator" content="Blogster" />
     <Favicon />
     <slot name="meta" />
-    <GoogleFont />
+    <Fonts />
     <ThemeScript />
     <FontAwesome />
 <ClientRouter />
