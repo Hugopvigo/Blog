@@ -67,6 +67,7 @@ const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
       </div>
 
       <div class="post__body prose article-body">
+        <TableOfContents headings={headings} inline />
         <slot name="content" />
       </div>
 
