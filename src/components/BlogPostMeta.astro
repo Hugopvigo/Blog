@@ -40,7 +40,7 @@ const { meta, og, twitter } = getBlogPostMeta({
   authorName: MY_NAME,
   publishDate,
   ogImageAbsoluteUrl: ogImageAbsoluteUrl || `${SITE_URL}/images/og.webp`,
-  ogImageAltText,
+  ogImageAltText: ogImageAltText || "Hugo Perez-Vigo — IA, producto, telco y Linux",
   ogImageWidth: ogImageWidth ?? 1200,
   ogImageHeight: ogImageHeight ?? 630,
   siteOwnerTwitterHandle: TWITTER_HANDLE,
