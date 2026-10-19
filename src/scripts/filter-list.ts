@@ -105,7 +105,10 @@ export function initFilterLists(): void {
           const url = new URL(window.location.href);
           if (active === ALL) url.searchParams.delete(param);
           else url.searchParams.set(param, active);
-          history.replaceState(null, "", url);
+          // Ojo: hay que conservar el estado del historial. Astro guarda ahí su
+          // índice de navegación; con `null` se pierde y el botón «atrás» deja
+          // de pintar la página anterior.
+          history.replaceState(history.state, "", url);
         }
       };
 
