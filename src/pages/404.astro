@@ -1,0 +1,146 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import PageMeta from "../components/PageMeta.astro";
+import PostRow from "../components/PostRow.astro";
+import { SITE_TITLE } from "../config";
+import { getPublishedPosts } from "../lib/content-utils";
+
+const posts = await getPublishedPosts();
+const last = posts.slice(0, 3);
+---
+
+<PageLayout promptPath="~/??" pagePath="/404">
+  <PageMeta
+    title={`404 | ${SITE_TITLE}`}
+    description="Esta página no existe."
+    slot="meta"
+    pagePath="/404"
+  />
+  <meta name="robots" content="noindex" slot="meta" />
+
+  <Fragment slot="main">
+    <section class="notfound">
+      <p class="notfound__cmd">
+        <span class="notfound__dollar" aria-hidden="true">$</span> cd
+        <span class="notfound__path" data-404-path>esa-ruta</span>
+      </p>
+      <p class="notfound__error">
+        bash: cd: <span class="notfound__path" data-404-path>esa-ruta</span>:
+        No such file or directory
+      </p>
+
+      <h1 class="notfound__title">
+        404<span class="notfound__underscore" aria-hidden="true">_</span>
+      </h1>
+
+      <div class="notfound__buttons">
+        <a class="notfound__button" href="/">cd ~</a>
+        <a class="notfound__button" href="/blog">cd ~/blog</a>
+        <a class="notfound__button" href="/projects">cd ~/proyectos</a>
+      </div>
+    </section>
+
+    <section class="last">
+      <p class="last__title">// lo último</p>
+      <div class="last__list">
+        {last.map((post) => <PostRow post={post} variant="related" />)}
+      </div>
+    </section>
+  </Fragment>
+</PageLayout>
+
+<script>
+  function initNotFoundPath() {
+    const path = window.location.pathname;
+    document.querySelectorAll("[data-404-path]").forEach((el) => {
+      el.textContent = path;
+    });
+  }
+
+  initNotFoundPath();
+  document.addEventListener("astro:page-load", initNotFoundPath);
+</script>
+
+<style>
+  .notfound {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(48px, 8vw, 104px) clamp(20px, 4vw, 40px) 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .notfound__cmd {
+    margin: 0;
+    font-size: 15px;
+    color: var(--mut);
+    overflow-wrap: anywhere;
+  }
+
+  .notfound__dollar {
+    color: var(--b);
+  }
+
+  .notfound__error {
+    margin: 0;
+    font-size: 15px;
+    color: var(--mut);
+    overflow-wrap: anywhere;
+  }
+
+  .notfound__title {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(48px, 8vw, 112px);
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+  }
+
+  .notfound__underscore {
+    color: var(--b);
+  }
+
+  .notfound__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 12px;
+  }
+
+  .notfound__button {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--a);
+    text-decoration: none;
+    padding: 10px 18px;
+    border: 1px solid var(--a);
+    border-radius: 999px;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .notfound__button:hover {
+    background: var(--a);
+    color: var(--inv);
+  }
+
+  .last {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(64px, 9vw, 112px) clamp(20px, 4vw, 40px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .last__title {
+    margin: 0;
+    font-size: 13px;
+    color: var(--b);
+  }
+
+  .last__list {
+    border-top: 1px solid var(--line);
+    margin: 0 calc(-1 * clamp(20px, 4vw, 40px));
+  }
+</style>

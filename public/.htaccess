@@ -1,0 +1,4 @@
+# La página 404 la genera Astro (src/pages/404.astro → dist/404.html).
+# El servidor tiene AllowOverride All para /var/www/html/dist/, así que este
+# fichero llega con el deploy normal.
+ErrorDocument 404 /404.html
