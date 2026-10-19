@@ -1,0 +1,49 @@
+---
+# Plantilla de un artículo.
+#
+# 1. Copia este fichero a src/content/blog/<slug>.mdoc.
+# 2. Rellena el frontmatter y quita las líneas que no uses.
+# 3. El `tag` es OBLIGATORIO en los posts publicados: sin él el build falla.
+# 4. El `snippet` es el fragmento de código que se ve en la ventana del
+#    diseño. Si no lo pones, el build lo saca del primer bloque de código del
+#    post (o del título) y avisa por consola.
+external: false
+title: "Título del artículo"
+description: "Una frase de entradilla: de qué va el post, en una línea."
+date: 2026-01-01
+tag: "IA"
+draft: true
+snippet:
+  file: "mi-snippet.sh"
+  lang: "bash"
+  code: |
+    $ comando --que-hace-cosa
+    # un guiño al tema del post
+---
+
+## Un encabezado
+
+El cuerpo del artículo va en Markdoc: **negrita**, `código`, [enlaces](https://markdoc.dev/)
+y las imágenes con `![texto](/images/una-imagen.jpg)`.
+
+## Otro encabezado
+
+- Listas
+- De
+- Markdown
+---
+
+## Reglas del fragmento de código (`snippet`)
+
+- De **3 a 5 líneas**. Ni un chasco ni un tocho.
+- Máximo **40 caracteres por línea**: se muestra en una ventana estrecha y no
+  debe partirse.
+- Debe ser un **guiño al tema del post**, no un resumen ni un fragmento
+  genérico. La idea es que se lea como una terminal de verdad.
+- `lang` tiene que ser uno de los que entiende Prism: `bash`, `python`,
+  `toml`, `nginx`, `yaml`, `json`, `javascript`, `markdown`.
+- `file` es el nombre del fichero que aparece en la barra de la ventana, con
+  su extensión: `mi-snippet.sh`, `pihole.toml`, `deepseek.py`.
+
+Si el post necesita una etiqueta que no existe, añade el valor nuevo a
+`BLOG_TAGS` en `src/config.ts`.

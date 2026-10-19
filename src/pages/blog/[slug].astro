@@ -1,18 +1,21 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import BlogPostMeta from "../../components/BlogPostMeta.astro";
 import ContentLayout from "../../layouts/ContentLayout.astro";
 import { SITE_URL } from "../../config";
-import { getReadingTime, extractHeadings } from "../../lib/content-utils";
+import {
+  getPublishedPosts,
+  getReadingTime,
+  extractHeadings,
+  postSlug,
+} from "../../lib/content-utils";
 
 export async function getStaticPaths() {
-  const posts = await getCollection(
-    "blog",
-    ({ data }) => !data.draft && !data.external
-  );
+  const posts = await getPublishedPosts();
+  const internal = posts.filter((entry) => !entry.data.external);
 
-  return posts.map((entry) => ({
-    params: { slug: entry.id.replace(/\.mdoc$/, "") },
+  return internal.map((entry) => ({
+    params: { slug: postSlug(entry) },
     props: { entry },
   }));
 }
@@ -20,7 +23,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 const frontmatter = entry.data;
-const slug = entry.id.replace(/\.mdoc$/, "");
+const slug = postSlug(entry);
 const readingTime = getReadingTime(entry.body ?? "");
 const headings = extractHeadings(entry.body ?? "");
 

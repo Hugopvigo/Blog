@@ -3,6 +3,15 @@ external: false
 title: "Habilitar HSTS en tu web"
 description: "Guia de como habilitar HSTS"
 date: 2025-02-08
+tag: "Seguridad"
+snippet:
+  file: "nginx.conf"
+  lang: "nginx"
+  code: |
+    add_header Strict-Transport-Security
+      "max-age=63072000;
+       includeSubDomains; preload"
+      always;
 ---
 
 ## ¿Qué es HSTS?

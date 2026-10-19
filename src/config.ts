@@ -4,6 +4,15 @@ export const TWITTER_HANDLE = "@hugopvigo";
 export const MY_NAME = "Hugo Perez-Vigo";
 export const SITE_LANG = "es";
 
+/**
+ * Etiquetas de los artículos. Un post publicado sin tag no compila:
+ * el orden de esta lista es el de las pastillas de filtro.
+ */
+export const BLOG_TAGS = ["IA", "Redes", "Internet", "Negocio", "Seguridad"] as const;
+
+/** Tipos de proyecto (pastillas de filtro de /projects). */
+export const PROJECT_TYPES = ["Web", "App", "Bot", "Script"] as const;
+
 const BASE_URL = new URL(import.meta.env.SITE);
 export const SITE_URL = BASE_URL.origin;
 

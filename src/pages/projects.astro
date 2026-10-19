@@ -1,15 +1,10 @@
 ---
-import { getCollection } from "astro:content";
 import PageLayout from "../layouts/PageLayout.astro";
 import PageMeta from "../components/PageMeta.astro";
 import { SITE_TITLE, formatDate } from "../config";
+import { getPublishedProjects } from "../lib/content-utils";
 
-const projects = await getCollection("projects", ({ data }) => !data.draft);
-
-const sortedProjects = projects.sort(
-  (a, b) =>
-    new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
-);
+const sortedProjects = await getPublishedProjects();
 ---
 
 <PageLayout>

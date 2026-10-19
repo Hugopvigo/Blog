@@ -1,15 +1,10 @@
 ---
-import { getCollection } from "astro:content";
 import PageLayout from "../layouts/PageLayout.astro";
 import PageMeta from "../components/PageMeta.astro";
 import { SITE_TITLE, formatDate } from "../config";
+import { getPublishedPosts, postSlug } from "../lib/content-utils";
 
-const posts = await getCollection("blog", ({ data }) => !data.draft);
-
-const sortedPosts = posts.sort(
-  (a, b) =>
-    new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
-);
+const sortedPosts = await getPublishedPosts();
 ---
 
 <PageLayout>
@@ -21,7 +16,7 @@ const sortedPosts = posts.sort(
     <ul class="unset">
       {
         sortedPosts.map((post) => {
-          const slug = post.id.replace(/\.mdoc$/, "");
+          const slug = postSlug(post);
           const formattedDate = formatDate(post.data.date);
           return (
             <li class="[&>*]:p-0 border-b-2 border-line/10 last:border-b-0">

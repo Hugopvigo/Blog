@@ -3,6 +3,15 @@ external: false
 title: "DNS en casa, en tus manos: XDP, Pi-hole y DoT en el router"
 description: "Cómo he montado la resolución DNS de mi casa con XDP, DoT y Pi-hole: privacidad frente a bloqueos y miradas indiscretas, con buen rendimiento."
 date: 2026-09-05
+tag: "Redes"
+snippet:
+  file: "pihole.toml"
+  lang: "toml"
+  code: |
+    $ dig @192.168.1.2 hugoperezvigo.es
+    ;; Query time: 1 msec
+    [dns]
+    upstreams = ["tls://1.1.1.1"]
 ---
 
 ![DNS local con XDP](/images/XDP_DNS_Local.jpg)
