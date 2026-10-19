@@ -1,48 +1,203 @@
 ---
 import Nav from "./Nav.astro";
-import DarkModeToggle from "./DarkModeToggle.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+
+export interface Props {
+  promptPath: string;
+  progress: boolean;
+}
+
+const { promptPath, progress } = Astro.props;
 ---
 
-<header class="sticky top-0 z-40 bg-bg-body border-b border-text-muted/10">
-  <a
-    class="unset absolute z-10 left-[50%] -top-[100rem] translate-x-[-50%] bg-white dark:bg-slate-900 text-black dark:text-white px-8 py-2 focus:top-2"
-    href="#main"
-  >
-    Skip to content
-  </a>
-  <Nav />
-  <div class="justify-self-end py-2 flex items-center gap-3 text-text-muted">
-    <a
-      class="unset hover:text-primary-yellow transition-colors duration-150"
-      href="https://github.com/Hugopvigo"
-      target="_blank"
-      rel="noopener noreferrer"
-      title="Hugo en GitHub"
-    >
-      <i class="fa-brands fa-github text-lg" aria-hidden="true"></i>
-      <span class="sr-only">GitHub</span>
+<a class="skip-link" href="#main">Saltar al contenido</a>
+
+<header class="site-header" data-site-header>
+  <nav class="container site-nav" aria-label="Navegación principal">
+    <div class="traffic" aria-hidden="true">
+      <span class="dot dot--red"></span>
+      <span class="dot dot--yellow"></span>
+      <span class="dot dot--green"></span>
+    </div>
+
+    <a class="prompt-logo" href="/">
+      <span class="logo-user">hugo</span><span class="logo-at">@</span
+      ><span class="logo-name">perez-vigo</span
+      ><span class="logo-path">:{promptPath}$</span>
     </a>
-    <a
-      class="unset hover:text-primary-blue transition-colors duration-150"
-      href="https://twitter.com/hugopvigo"
-      target="_blank"
-      rel="noopener noreferrer"
-      title="Hugo en Twitter"
-    >
-      <i class="fa-brands fa-twitter text-lg" aria-hidden="true"></i>
-      <span class="sr-only">Twitter</span>
-    </a>
-  </div>
-  <DarkModeToggle />
+
+    <div class="nav-group">
+      <Nav />
+      <ThemeToggle />
+    </div>
+  </nav>
+
+  {
+    progress && (
+      <div class="progress" aria-hidden="true">
+        <div class="progress-bar" data-progress-bar></div>
+      </div>
+    )
+  }
 </header>
+
 <style>
-  header {
-    grid-area: header;
-    display: grid;
+  .skip-link {
+    position: absolute;
+    left: 50%;
+    top: -100rem;
+    transform: translateX(-50%);
+    z-index: 20;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: var(--a);
+    color: var(--inv);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .skip-link:focus {
+    top: 8px;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-nav {
+    padding-block: 14px;
+    display: flex;
     align-items: center;
-    grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(
-      0,
-      max-content
-    );
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 14px;
+  }
+
+  .traffic {
+    display: flex;
+    gap: 7px;
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .dot--red {
+    background: #ff5f57;
+  }
+
+  .dot--yellow {
+    background: #febc2e;
+  }
+
+  .dot--green {
+    background: #28c840;
+  }
+
+  @media (max-width: 480px) {
+    .traffic {
+      display: none;
+    }
+  }
+
+  .prompt-logo {
+    margin-right: auto;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .logo-user {
+    color: var(--b);
+  }
+
+  .logo-at {
+    color: var(--mut);
+  }
+
+  .logo-name {
+    color: var(--a);
+  }
+
+  .logo-path {
+    color: var(--mut);
+  }
+
+  .nav-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .progress {
+    height: 2px;
+    background: transparent;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0;
+    background: var(--a);
+    box-shadow: 0 0 12px var(--a);
   }
 </style>
+
+<script>
+  let headerObserver: ResizeObserver | null = null;
+  let progressHandler: (() => void) | null = null;
+
+  function initHeader() {
+    const header = document.querySelector("[data-site-header]");
+    if (!header) return;
+
+    if (headerObserver) headerObserver.disconnect();
+    const update = () => {
+      document.documentElement.style.setProperty(
+        "--header-h",
+        `${header.offsetHeight}px`
+      );
+    };
+    update();
+    headerObserver = new ResizeObserver(update);
+    headerObserver.observe(header);
+  }
+
+  function initProgress() {
+    const bar = document.querySelector("[data-progress-bar]");
+    if (!bar) return;
+
+    if (progressHandler) window.removeEventListener("scroll", progressHandler);
+    const update = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0;
+      bar.style.width = `${pct}%`;
+    };
+    progressHandler = update;
+    window.addEventListener("scroll", progressHandler, { passive: true });
+    update();
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    initHeader();
+    initProgress();
+  });
+
+  document.addEventListener("astro:before-swap", () => {
+    if (headerObserver) {
+      headerObserver.disconnect();
+      headerObserver = null;
+    }
+    if (progressHandler) {
+      window.removeEventListener("scroll", progressHandler);
+      progressHandler = null;
+    }
+  });
+</script>

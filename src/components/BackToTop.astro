@@ -2,7 +2,7 @@
 ---
 
 <button id="back-to-top" aria-label="Volver arriba" title="Volver arriba">
-  <i class="fa-solid fa-arrow-up"></i>
+  <span aria-hidden="true">↑</span> arriba
 </button>
 
 <style>
@@ -10,22 +10,22 @@
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    border: none;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--a);
+    background-color: var(--bg);
+    color: var(--fg);
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 13px;
     opacity: 0;
     transform: translateY(0.5rem);
     transition: opacity 0.2s, transform 0.2s;
     pointer-events: none;
     z-index: 50;
-    background-color: var(--color-primary-blue, #0ea5e9);
-    color: #fff;
   }
 
   #back-to-top.visible {

@@ -1,22 +1,32 @@
 ---
-/* 
-  This layout is used in 
-  - pages/index.astro
-  - pages/blog.astro
-  - pages/projects.astro
-*/
+/*
+  Layout de todas las páginas. El body va a ancho completo: cada sección
+  define su propio contenedor de 1240px (utilidad .container).
 
-// Import the global.css file here so that it is included on
+  Props:
+    promptPath  ruta que se muestra en el prompt-logo de la cabecera
+    progress    muestra la barra de progreso de lectura (artículos)
+  Slots:
+    meta        metadatos de la página (<head>)
+    main        contenido
+    fixed       elementos fijos (índice, volver arriba)
+*/
 import "../styles/global.css";
 
 import Fonts from "./Fonts.astro";
-import FontAwesome from "./FontAwesome.astro";
 import ThemeScript from "./ThemeScript.astro";
 import Favicon from "./Favicon.astro";
 import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { SITE_LANG } from "../config";
+
+export interface Props {
+  promptPath?: string;
+  progress?: boolean;
+}
+
+const { promptPath = "~", progress = false } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -25,38 +35,20 @@ import { SITE_LANG } from "../config";
     <!-- Global Metadata -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="generator" content="Blogster" />
+    <meta name="generator" content="Astro" />
     <Favicon />
     <slot name="meta" />
     <Fonts />
     <ThemeScript />
-    <FontAwesome />
-<ClientRouter />
+    <ClientRouter />
   </head>
 
-  <body
-    class="max-w-3xl mx-auto min-h-screen px-6 sm:px-8"
-  >
-    <Header />
-    <main id="main" transition:animate="fade">
+  <body>
+    <Header promptPath={promptPath} progress={progress} />
+    <main id="main">
       <slot name="main" />
     </main>
     <slot name="fixed" />
     <Footer />
-    <style>
-      body {
-        display: grid;
-        grid-template-areas:
-          "header"
-          "main"
-          "footer";
-        grid-template-rows: 5rem minmax(0, 1fr) auto;
-        grid-template-columns: minmax(0, 1fr);
-      }
-      main {
-        grid-area: main;
-        padding-bottom: 3rem;
-      }
-    </style>
   </body>
 </html>

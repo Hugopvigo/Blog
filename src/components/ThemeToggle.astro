@@ -1,0 +1,63 @@
+---
+---
+
+<button type="button" class="theme-toggle" data-theme-toggle aria-pressed="true">
+  <span data-theme-label>◐ modo claro</span>
+</button>
+
+<style>
+  .theme-toggle {
+    font: inherit;
+    font-size: 13px;
+    color: var(--fg);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--a);
+    color: var(--a);
+  }
+</style>
+
+<script>
+  function initThemeToggle() {
+    const btn = document.querySelector("[data-theme-toggle]");
+    if (!btn) return;
+    const label = btn.querySelector("[data-theme-label]");
+
+    const paint = () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      btn.setAttribute("aria-pressed", String(isDark));
+      if (label) label.textContent = isDark ? "◐ modo claro" : "◑ modo oscuro";
+    };
+
+    paint();
+
+    if (btn.dataset.themeBound) return;
+    btn.dataset.themeBound = "1";
+
+    btn.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      const next = isDark ? "light" : "dark";
+
+      document.documentElement.classList.toggle("dark", next === "dark");
+      try {
+        localStorage.setItem("theme", next);
+      } catch (e) {
+        /* sin localStorage el cambio dura lo que la página. */
+      }
+
+      const meta = document.head.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute("content", next === "dark" ? "#0e1214" : "#eef2ef");
+
+      paint();
+    });
+  }
+
+  document.addEventListener("astro:page-load", initThemeToggle);
+</script>

@@ -153,3 +153,14 @@
     transition: none !important;
   }
 }
+
+/*
+  Contenedor del diseño: 1240px con el gutter de la cabecera.
+  Va fuera de @layer para ganar a la utilidad `container` de Tailwind.
+*/
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 4vw, 40px);
+}

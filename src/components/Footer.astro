@@ -1,52 +1,57 @@
 ---
+const year = new Date().getFullYear();
 ---
 
-<footer class="text-sm text-text-muted leading-[1.75] mt-4 border-t border-text-muted/10 pt-4">
-  <div>
-    Construido con
-    <a
-      class="unset gradient-link tracking-wider font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#f57111] to-[#f79605] hover:after:bg-gradient-to-r hover:after:from-[#f57111] hover:after:to-[#f79605]"
-      href={"https://github.com/hugopvigo/blog"}
-      target="_blank"
-      rel="noopener noreferrer"
-    >Astro</a> &middot; alojado en
-    <a
-      class="unset gradient-link tracking-wider font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#00abda] to-[#1476ff] hover:after:bg-gradient-to-r hover:after:from-[#00abda] hover:after:to-[#1476ff]"
-      href={"https://www.oracle.com/"}
-      target="_blank"
-      rel="noopener noreferrer"
-    >Oracle</a>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="footer-copy"
+      ><span class="dollar" aria-hidden="true">$</span> exit 0
+      <span class="mut">— © {year} Hugo Perez-Vigo</span></span
+    >
+    <div class="footer-links">
+      <a href="https://github.com/Hugopvigo" target="_blank" rel="noopener noreferrer"
+        >github</a
+      >
+      <a
+        href="https://twitter.com/hugopvigo"
+        target="_blank"
+        rel="noopener noreferrer">twitter</a
+      >
+      <a href="/rss.xml">rss</a>
+    </div>
   </div>
 </footer>
 
 <style>
-  footer {
-    grid-area: footer;
-    text-align: center;
+  .site-footer {
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-inner {
+    padding-block: 28px 40px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: var(--mut);
   }
 
-  .gradient-link {
-    position: relative;
-    box-decoration-break: clone;
+  .dollar {
+    color: var(--b);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  .footer-links a {
     text-decoration: none;
+    transition: color 0.2s;
   }
 
-  .gradient-link:hover:after {
-    transform: translateZ(0) scale(1);
-  }
-
-  .gradient-link:after {
-    left: 0;
-    right: 0;
-    bottom: -2px;
-    content: "";
-    height: 2px;
-    position: absolute;
-    transform: translateZ(0) scaleX(0);
-    transform-origin: left center;
-    transition: all 0.15s ease-in-out;
+  .footer-links a:hover {
+    color: var(--a);
   }
 </style>

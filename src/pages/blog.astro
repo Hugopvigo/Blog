@@ -24,7 +24,7 @@ const sortedPosts = posts.sort(
           const slug = post.id.replace(/\.mdoc$/, "");
           const formattedDate = formatDate(post.data.date);
           return (
-            <li class="[&>*]:p-0 border-b border-text-muted/10 last:border-b-0">
+            <li class="[&>*]:p-0 border-b-2 border-line/10 last:border-b-0">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 py-3 sm:py-4 group">
                 <div class="title">
                   {post.data.external ? (
@@ -40,7 +40,9 @@ const sortedPosts = posts.sort(
                       "
                     >
                       <span>{post.data.title}</span>
-                      <i class="ml-1.5 text-[11px] fa-solid fa-up-right-from-square opacity-60" />
+                      <span class="ml-1.5 text-[11px] opacity-60" aria-hidden="true"
+                        >↗</span
+                      >
                     </a>
                   ) : (
                     <a

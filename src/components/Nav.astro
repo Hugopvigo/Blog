@@ -1,96 +1,53 @@
 ---
-import HeaderLink from "./HeaderLink.astro";
+const links = [
+  { href: "/", label: "./inicio" },
+  { href: "/blog", label: "./blog" },
+  { href: "/projects", label: "./proyectos" },
+];
+
+// Misma lógica de activo que el HeaderLink de la plantilla: la portada solo
+// está activa en "/" y el resto de secciones, en sus subrutas.
+const path = Astro.url.pathname.replace(/\/$/, "");
+const isActive = (href: string) =>
+  href === "/" ? path === "" : path.substring(1).startsWith(href.substring(1));
 ---
 
-<Fragment>
-  <nav class="hidden md:inline" aria-label="Navegación principal">
-    <section class="text-text-bold">
-      <ul class="unset flex gap-4 [&>li]:p-0">
-        <li><HeaderLink href="/">Home</HeaderLink></li>
-        <li><HeaderLink href="/blog">Blog</HeaderLink></li>
-        <li><HeaderLink href="/projects">Projects</HeaderLink></li>
-      </ul>
-    </section>
-  </nav>
-  <nav class="md:hidden" aria-label="Menú móvil">
-    <button id="mobile-menu-open" class="p-2 rounded-md bg-transparent border-0 cursor-pointer hover:bg-text-muted/10 transition-colors" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
-      <i class="fa-solid fa-bars text-lg" aria-hidden="true"></i>
-    </button>
-    <section
-      id="mobile-menu"
-      class="hide-menu fixed top-0 left-0 z-50 w-full h-full transition-transform bg-black/60"
-    >
-      <div class="bg-bg-body w-[80%] max-w-xs h-full drop-shadow-2xl flex flex-col">
-        <div class="flex items-center justify-between px-6 h-[5rem] border-b border-text-muted/10">
-          <span class="font-bold text-text-heading">Menú</span>
-          <button id="mobile-menu-close" class="p-2 rounded-md bg-transparent border-0 cursor-pointer hover:bg-text-muted/10 transition-colors" aria-label="Cerrar menú">
-            <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
-          </button>
-        </div>
-        <ul class="unset flex flex-col gap-1 [&>li]:p-0 p-4 mt-2">
-          <li><HeaderLink href="/" class="block px-4 py-2 rounded-md hover:bg-text-muted/10 transition-colors text-lg font-medium">Home</HeaderLink></li>
-          <li><HeaderLink href="/blog" class="block px-4 py-2 rounded-md hover:bg-text-muted/10 transition-colors text-lg font-medium">Blog</HeaderLink></li>
-          <li><HeaderLink href="/projects" class="block px-4 py-2 rounded-md hover:bg-text-muted/10 transition-colors text-lg font-medium">Projects</HeaderLink></li>
-        </ul>
-      </div>
-    </section>
-  </nav>
-</Fragment>
-
-  <script>
-    let escHandler: ((e: KeyboardEvent) => void) | null = null;
-
-    function initMobileMenu() {
-      const openBtn = document.querySelector("#mobile-menu-open");
-      const closeBtn = document.querySelector("#mobile-menu-close");
-      const menuElem = document.querySelector("#mobile-menu");
-
-      if (!openBtn || !closeBtn || !menuElem) return;
-
-      const openMenu = () => {
-        menuElem.classList.remove("hide-menu");
-        menuElem.classList.add("show-menu");
-        document.body.style.overflow = "hidden";
-        openBtn.setAttribute("aria-expanded", "true");
-      };
-
-      const closeMenu = () => {
-        menuElem.classList.remove("show-menu");
-        menuElem.classList.add("hide-menu");
-        document.body.style.overflow = "";
-        openBtn.setAttribute("aria-expanded", "false");
-      };
-
-      openBtn.addEventListener("click", openMenu);
-      closeBtn.addEventListener("click", closeMenu);
-
-      if (escHandler) {
-        document.removeEventListener("keydown", escHandler);
-      }
-      escHandler = (e: KeyboardEvent) => {
-        if (e.key === "Escape" && menuElem.classList.contains("show-menu")) {
-          closeMenu();
-        }
-      };
-      document.addEventListener("keydown", escHandler);
-
-      const links = menuElem.querySelectorAll("a");
-      links.forEach((link) => {
-        link.addEventListener("click", closeMenu);
-      });
-    }
-
-    document.addEventListener("astro:page-load", initMobileMenu);
-    document.addEventListener("astro:before-swap", () => {
-      document.body.style.overflow = "";
-    });
-  </script>
+<ul class="unset nav-links">
+  {
+    links.map((link) => (
+      <li>
+        <a
+          href={link.href}
+          class:list={["nav-link", { "is-active": isActive(link.href) }]}
+          aria-current={isActive(link.href) ? "page" : undefined}
+        >
+          {link.label}
+        </a>
+      </li>
+    ))
+  }
+</ul>
 
 <style>
-  .hide-menu {
-    transform: translateX(-100%);
+  .nav-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
   }
-  .show-menu {
-    transform: translateX(0%);
+
+  .nav-link {
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: var(--a);
+  }
+
+  .nav-link.is-active {
+    color: var(--a);
   }
 </style>

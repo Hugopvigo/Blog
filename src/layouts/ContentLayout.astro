@@ -17,14 +17,14 @@ const { title, date, slug, readingTime, headings = [] } = Astro.props;
 const formattedDate = formatDate(date);
 ---
 
-<PageLayout>
+<PageLayout promptPath="~/blog" progress>
   <slot name="meta" slot="meta" />
   <section slot="main" class="blog-post prose max-w-none prose-bubblegum">
     <a
       href="/blog"
-      class="unset not-prose flex items-center gap-1.5 text-text-muted text-sm hover:text-text-link transition-colors duration-150 mb-8 w-fit"
+      class="unset not-prose flex items-center gap-1.5 text-mut text-sm transition-colors duration-150 mb-8 w-fit"
     >
-      <i class="fa-solid fa-arrow-left text-xs"></i>
+      <span aria-hidden="true">←</span>
       <span>Volver al blog</span>
     </a>
     <h1 class="m-0 mb-[0.25em]">
