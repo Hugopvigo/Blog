@@ -21,7 +21,9 @@ export interface Props {
 }
 
 const { entry, readingTime, headings, related } = Astro.props;
-const { title, description, tag, date } = entry.data;
+const { title, tag, date } = entry.data;
+// `description` solo existe en la rama interna de la unión de la colección.
+const description = entry.data.external ? undefined : entry.data.description;
 const slug = postSlug(entry);
 const canonical = new URL(`/blog/${slug}`, SITE_URL).toString();
 const formatted = formatDate(date);

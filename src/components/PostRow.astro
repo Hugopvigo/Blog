@@ -63,9 +63,9 @@ const external = post.data.external === true;
 
   {
     variant !== "related" && (
-      <span class="post-row__peek" aria-hidden="true">
+      <div class="post-row__peek" aria-hidden="true">
         <Snippet snippet={resolveSnippet(post)} size="sm" />
-      </span>
+      </div>
     )
   }
 </a>

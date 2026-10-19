@@ -348,7 +348,10 @@
   text-underline-offset: 3px;
 }
 
-.article-body code {
+/* Solo el código en línea: el de los bloques va dentro de `.term-code`, que
+   siempre es oscuro y lleva su propio estilo (si no, el chip se le pinta
+   encima). */
+.article-body code:not(pre code) {
   font-family: var(--font-mono);
   font-size: 0.85em;
   font-weight: 400;

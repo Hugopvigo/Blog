@@ -165,6 +165,14 @@ const tagOptions = [
     border: 1px solid var(--line);
     border-radius: 999px;
     background: var(--bg2);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  /* El input no puede tener outline propio (rompe la pastilla): el foco se
+     ve en el borde de la pastilla. */
+  .search:focus-within {
+    border-color: var(--a);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--a) 30%, transparent);
   }
 
   .search__label {

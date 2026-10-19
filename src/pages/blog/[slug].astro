@@ -36,8 +36,10 @@ const related = relatedPosts(entry, posts, 3);
 const firstImage = (body: string): string | undefined =>
   body.match(/!\[[^\]]*\]\(([^)\s]+)/)?.[1];
 
+// `ogImagePath` solo existe en la rama interna de la unión de la colección.
 const ogImagePath =
-  frontmatter.ogImagePath ?? firstImage(entry.body ?? "");
+  (frontmatter.external ? undefined : frontmatter.ogImagePath) ??
+  firstImage(entry.body ?? "");
 const ogImageAbsoluteUrl = ogImagePath
   ? new URL(ogImagePath, SITE_URL).toString()
   : undefined;

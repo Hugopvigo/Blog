@@ -7,10 +7,12 @@ interface Props {
 }
 
 const { level, id } = Astro.props;
-const Tag = `h${level}` as HTMLTag;
+// El título de la página es el único <h1>: un `#` en el cuerpo del post se
+// renderiza como <h2> para no invertir la jerarquía.
+const Tag = `h${level === 1 ? 2 : level}` as HTMLTag;
 // Prefijo de terminal: «## » para los h2, «### » para los h3… (el espacio va
 // dentro del prefijo: Astro quita el salto de línea de la plantilla).
-const prefix = level >= 2 ? `${"#".repeat(level)} ` : "";
+const prefix = level >= 2 ? `${"#".repeat(level)} ` : "## ";
 ---
 
 <Tag id={id} class="post-heading">
