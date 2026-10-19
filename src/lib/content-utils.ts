@@ -1,5 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
-import slugify from "slugify";
+import { headingSlug } from "./heading-slug";
 
 export function getReadingTime(body: string): number {
   const words = body.trim().split(/\s+/).length;
@@ -18,8 +18,13 @@ export function extractHeadings(body: string): Heading[] {
   let match: RegExpExecArray | null;
   while ((match = headingRegex.exec(body)) !== null) {
     const depth = match[1].length;
-    const text = match[2].trim();
-    headings.push({ depth, text, slug: slugify(text.toLowerCase()) });
+    // El texto tal como se lee: sin la marca de `código`, **negrita** ni la
+    // url de los enlaces (igual que el id que pone Markdoc al encabezado).
+    const text = match[2]
+      .trim()
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+      .replace(/[`*]|(?<!\w)_|_(?!\w)/g, "");
+    headings.push({ depth, text, slug: headingSlug(text) });
   }
   return headings;
 }

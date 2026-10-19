@@ -1,6 +1,6 @@
 import { defineMarkdocConfig, component } from "@astrojs/markdoc/config";
 import Markdoc from "@markdoc/markdoc";
-import slugify from "slugify";
+import { headingSlug } from "./src/lib/heading-slug";
 
 const { nodes, Tag } = Markdoc;
 
@@ -86,10 +86,13 @@ export default defineMarkdocConfig({
       transform(node, config) {
         const attributes = node.transformAttributes(config);
         const children = node.transformChildren(config);
-        const headingText = children
-          .filter((c) => typeof c === "string")
+        // Todo el texto del título, también el que va en `código`, **negrita**
+        // o enlaces: el mismo que ve extractHeadings en el markdown.
+        const headingText = Array.from(node.walk())
+          .filter((n) => n.type === "text" || n.type === "code")
+          .map((n) => n.attributes.content)
           .join("");
-        const id = slugify(headingText.toLowerCase());
+        const id = headingSlug(headingText);
         return new Tag(this.render, { ...attributes, id }, children);
       },
     },
