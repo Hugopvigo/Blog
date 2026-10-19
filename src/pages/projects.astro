@@ -1,54 +1,132 @@
 ---
 import PageLayout from "../layouts/PageLayout.astro";
 import PageMeta from "../components/PageMeta.astro";
-import { SITE_TITLE, formatDate } from "../config";
+import Prompt from "../components/Prompt.astro";
+import FilterPills from "../components/FilterPills.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { PROJECT_TYPES, SITE_TITLE } from "../config";
 import { getPublishedProjects } from "../lib/content-utils";
 
-const sortedProjects = await getPublishedProjects();
+const projects = await getPublishedProjects();
+
+// Las cuentas de las pastillas se calculan, no se escriben a mano.
+const countOf = (type: string) =>
+  projects.filter((project) => project.data.type === type).length;
+
+const typeOptions = [
+  { value: "*", label: `* ${projects.length}` },
+  ...PROJECT_TYPES.map((type) => ({
+    value: type,
+    label: `${type.toLowerCase()} ${countOf(type)}`,
+  })),
+];
 ---
 
-<PageLayout>
-  <PageMeta title={`Projects | ${SITE_TITLE}`} slot="meta" pagePath="/projects" />
-  <section slot="main" class="pt-8">
-    <h2 class="font-bold text-text-muted text-xs tracking-[0.2em] uppercase mb-6">
-      Proyectos
-    </h2>
-    <ul class="unset">
-      {
-        sortedProjects.map((project) => {
-          const formattedDate = formatDate(project.data.date);
-          return (
-            <li class="[&>*]:p-0 border-b-2 border-line/10 last:border-b-0">
-              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 py-3 sm:py-4">
-                <div class="title">
-                  <a
-                    href={project.data.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="unset
-                      transition-[background-size] duration-300
-                      bg-gradient-to-r bg-left-bottom bg-no-repeat
-                      bg-[length:0%_55%] hover:bg-[length:100%_55%] dark:bg-[length:0%_2px] hover:dark:bg-[length:100%_2px]
-                      from-primary-blue to-primary-blue dark:from-primary-blue dark:to-primary-blue
-                    "
-                  >
-                    <span>{project.data.title}</span>
-                    <span class="ml-1.5 text-[11px] opacity-60" aria-hidden="true"
-                      >↗</span
-                    >
-                  </a>
-                </div>
-                <time
-                  datetime={project.data.date.toISOString()}
-                  class="text-text-muted text-sm tabular-nums shrink-0"
-                >
-                  {formattedDate}
-                </time>
-              </div>
-            </li>
-          );
-        })
-      }
-    </ul>
-  </section>
+<PageLayout promptPath="~/proyectos">
+  <PageMeta
+    title={`Proyectos | ${SITE_TITLE}`}
+    slot="meta"
+    pagePath="/projects"
+  />
+
+  <header slot="main" class="head">
+    <Prompt
+      >ls ~/proyectos <span class="text-mut"
+        ># {projects.length} proyectos, de noche</span
+      ></Prompt
+    >
+    <h1 class="head__title">proyectos<span class="head__slash">/</span></h1>
+    <p class="head__lead">
+      Apps del tiempo, bots de Telegram y cosas que no le interesan a nadie más
+      que a mí.
+    </p>
+  </header>
+
+  <div slot="main" class="projects" data-filter-root data-filter-param="type">
+    <div class="bar">
+      <FilterPills label="Filtrar proyectos por tipo" options={typeOptions} />
+      <span class="bar__count" data-filter-shown
+        >{projects.length} de {projects.length}</span
+      >
+    </div>
+
+    <div class="grid">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </div>
 </PageLayout>
+
+<script>
+  import { initFilterLists } from "../scripts/filter-list";
+  initFilterLists();
+</script>
+
+<style>
+  .head {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(48px, 8vw, 104px) clamp(20px, 4vw, 40px) 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .head__title {
+    margin: 0;
+    font-weight: 800;
+    font-size: clamp(48px, 8vw, 112px);
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+  }
+
+  .head__slash {
+    color: var(--a);
+  }
+
+  .head__lead {
+    margin: 0;
+    max-width: 56ch;
+    font-size: 17px;
+    color: var(--mut);
+    text-wrap: pretty;
+  }
+
+  .projects {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px) clamp(64px, 9vw, 112px);
+  }
+
+  /* La barra se pega bajo la cabecera solo en pantallas anchas. */
+  .bar {
+    display: flex;
+    gap: 12px 24px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 14px 0;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (min-width: 768px) {
+    .bar {
+      position: sticky;
+      top: var(--header-h, 62px);
+      z-index: 5;
+    }
+  }
+
+  .bar__count {
+    font-size: 14px;
+    color: var(--mut);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+    padding: clamp(32px, 5vw, 56px) 0 0;
+  }
+</style>
