@@ -3,6 +3,10 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import markdoc from "@astrojs/markdoc";
+import sharp from "sharp";
+import { readdir } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 /* 
   We are doing some URL mumbo jumbo here to tell Astro what the URL of your website will be.
@@ -28,6 +32,56 @@ if (isBuild) {
   BASE_URL = LIVE_URL;
 }
 
+/*
+  Las imágenes de los posts viven en `public/images/`, así que `astro:assets`
+  no las procesa y no puede ponerles `width`/`height`. Para que el navegador
+  reserve el hueco de la imagen (y el texto de debajo no salte) hace falta
+  saber su tamaño real.
+
+  Este plugin mide todas las imágenes de `public/images/` con sharp y expone
+  un mapa `{ "/images/fichero.jpg": { width, height } }` por un módulo
+  virtual. El mapa se calcula en cada build, así que no se queda obsoleto.
+*/
+const IMAGES_DIR = fileURLToPath(new URL("./public/images/", import.meta.url));
+const IMAGE_SIZES_ID = "virtual:image-sizes";
+const RESOLVED_IMAGE_SIZES_ID = "\0" + IMAGE_SIZES_ID;
+
+function imageSizesPlugin() {
+  return {
+    name: "image-sizes",
+    resolveId(id) {
+      if (id === IMAGE_SIZES_ID) return RESOLVED_IMAGE_SIZES_ID;
+      return undefined;
+    },
+    async load(id) {
+      if (id !== RESOLVED_IMAGE_SIZES_ID) return undefined;
+
+      const sizes = {};
+      let files = [];
+      try {
+        files = await readdir(IMAGES_DIR);
+      } catch {
+        // Sin `public/images/` no hay nada que medir.
+        files = [];
+      }
+
+      for (const file of files.sort()) {
+        if (!/\.(jpe?g|png|webp|avif|gif)$/i.test(file)) continue;
+        try {
+          const { width, height } = await sharp(
+            join(IMAGES_DIR, file)
+          ).metadata();
+          if (!width || !height) continue;
+          sizes[`/images/${file}`] = { width, height };
+        } catch {
+          // Imagen ilegible: se queda sin medidas (no rompe el build).
+        }
+      }
+      return `export default ${JSON.stringify(sizes)};`;
+    },
+  };
+}
+
 export default defineConfig({
   prefetch: false,
   server: { port: SERVER_PORT },
@@ -41,6 +95,6 @@ export default defineConfig({
     sitemap(),
   ],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), imageSizesPlugin()],
   },
 });

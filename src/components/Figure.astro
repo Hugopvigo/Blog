@@ -1,4 +1,6 @@
 ---
+import imageSizes from "virtual:image-sizes";
+
 export interface Props {
   src: string;
   alt?: string;
@@ -7,6 +9,10 @@ export interface Props {
 
 const { src, alt = "", title } = Astro.props;
 const file = src.split("/").pop() ?? src;
+// Tamaño real de la imagen (lo mide el plugin `image-sizes` en cada build).
+// Con `width`/`height` el navegador reserva el hueco y el texto de debajo no
+// salta al cargar la imagen.
+const size = imageSizes[src];
 ---
 
 <span class="term-figure">
@@ -18,7 +24,15 @@ const file = src.split("/").pop() ?? src;
       </span>
       <span class="term-figure__title">~/imagenes/{file}</span>
     </span>
-    <img src={src} alt={alt} loading="lazy" decoding="async" />
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      width={size?.width}
+      height={size?.height}
+      style={size ? `aspect-ratio: ${size.width} / ${size.height}` : undefined}
+    />
   </span>
   {
     title && (

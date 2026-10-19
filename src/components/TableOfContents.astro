@@ -28,10 +28,20 @@ const visible = headings.filter((h) => h.depth <= 3);
 
 <style>
   .toc {
+    /*
+      El contenido del artículo (el fragmento grande y las figuras anchas)
+      mide 1040 px —la misma cifra que `--figure-width` en global.css— y va
+      centrado: la margen derecha libre es (ancho - 1040) / 2. El índice va
+      FUERA de esa franja y su ancho se ajusta a la margen que queda, así que
+      no puede solaparse con el contenido por muy ancha que sea la figura.
+    */
+    --band: 1040px;
+    --gap: 0.75rem;
+    --toc-width: 13rem;
     position: fixed;
     top: 5.5rem;
-    left: calc(50% + 25rem);
-    width: 13rem;
+    left: calc(50% + var(--band) / 2 + var(--gap));
+    width: min(var(--toc-width), calc(50% - var(--band) / 2 - var(--gap) * 2));
     max-height: calc(100vh - 7rem);
     overflow-y: auto;
     display: none;
@@ -39,9 +49,22 @@ const visible = headings.filter((h) => h.depth <= 3);
     line-height: 1.5;
   }
 
-  @media (min-width: 1300px) {
+  /*
+    La margen derecha necesita 520 (media franja) + índice + 2 × respiro:
+    a partir de 1360 px el índice ya tiene sitio (y sale de 13 rem, su
+    ancho de diseño, a partir de 1520 px). Por debajo se estrecha con la
+    margen, nunca se solapa.
+  */
+  @media (min-width: 1360px) {
     .toc {
       display: block;
+    }
+  }
+
+  /* Margen estrecha: cuerpo más pequeño para que los títulos quepan. */
+  @media (min-width: 1360px) and (max-width: 1519px) {
+    .toc {
+      font-size: 0.74rem;
     }
   }
 

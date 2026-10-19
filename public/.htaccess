@@ -1,4 +1,28 @@
-# La página 404 la genera Astro (src/pages/404.astro → dist/404.html).
-# El servidor tiene AllowOverride All para /var/www/html/dist/, así que este
-# fichero llega con el deploy normal.
+# Página 404 del sitio.
+#
+# La genera Astro: src/pages/404.astro → dist/404.html.
+#
+# COMPROBADO (solo lectura) el 19-oct-2026 por SSH en el VPS 7
+# (alias `oracle`, host `ampereone`, Apache/2.4.58 Ubuntu).
+# El vhost activo es /etc/apache2/sites-available/hugoperezvigo.conf
+# (sites-enabled/hugoperezvigo.conf es un symlink a ese fichero) y su
+# bloque es (líneas 16-19):
+#
+#     DocumentRoot /var/www/html/dist/
+#     <Directory /var/www/html/dist/>
+#         AllowOverride All
+#         Require all granted
+#
+# `AllowOverride All` (línea 18) incluye FileInfo, así que Apache lee los
+# .htaccess de /var/www/html/dist/ y la directiva ErrorDocument es válida.
+# Ojo: el /var/www/ de /etc/apache2/apache2.conf lleva `AllowOverride None`,
+# pero el bloque <Directory> del vhost es más específico y lo sustituye.
+# NO hay que tocar la configuración de Apache.
+#
+# El fichero llega al servidor con el deploy normal: Astro copia public/ a
+# dist/ y el rsync de deploy.sh sube dist/ a /var/www/html/dist/.
+#
+# Para volver a comprobarlo:
+#   ssh oracle 'hostname; grep -n "DocumentRoot\|AllowOverride\|Require" \
+#     /etc/apache2/sites-available/hugoperezvigo.conf'
 ErrorDocument 404 /404.html

@@ -154,7 +154,7 @@ const { promptPath, progress } = Astro.props;
   let progressHandler: (() => void) | null = null;
 
   function initHeader() {
-    const header = document.querySelector("[data-site-header]");
+    const header = document.querySelector<HTMLElement>("[data-site-header]");
     if (!header) return;
 
     if (headerObserver) headerObserver.disconnect();
@@ -170,7 +170,7 @@ const { promptPath, progress } = Astro.props;
   }
 
   function initProgress() {
-    const bar = document.querySelector("[data-progress-bar]");
+    const bar = document.querySelector<HTMLElement>("[data-progress-bar]");
     if (!bar) return;
 
     if (progressHandler) window.removeEventListener("scroll", progressHandler);

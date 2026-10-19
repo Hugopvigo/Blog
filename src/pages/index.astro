@@ -1,4 +1,5 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import PageMeta from "../components/PageMeta.astro";
 import PageLayout from "../layouts/PageLayout.astro";
 import Prompt from "../components/Prompt.astro";
@@ -20,8 +21,9 @@ const posts = await getPublishedPosts();
 const projects = await getPublishedProjects();
 
 // Destacado: el post con featured: true o, si no hay ninguno, el último
-// publicado (D1).
-const featured = posts.find((post) => post.data.featured) ?? posts[0];
+// publicado (D1). Puede no haber ninguno: sin posts, no se pinta la sección.
+const featured: CollectionEntry<"blog"> | undefined =
+  posts.find((post) => post.data.featured) ?? posts[0];
 const featuredProjects = projects
   .filter((project) => project.data.featured)
   .slice(0, 3);
@@ -46,9 +48,13 @@ const tagOptions = [
   <Hero slot="main" />
   <Ticker slot="main" />
 
-  <section slot="main" class="section">
-    <FeaturedPost post={featured} />
-  </section>
+  {
+    featured && (
+      <section slot="main" class="section">
+        <FeaturedPost post={featured} />
+      </section>
+    )
+  }
 
   <section slot="main" id="blog" class="section section--posts" data-filter-root data-filter-limit="5">
     <div class="section__head">

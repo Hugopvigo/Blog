@@ -1,9 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Snippet from "./Snippet.astro";
-import {
-  formatDate,
-} from "../config";
+import { formatDate } from "../config";
 import {
   getReadingTime,
   normalize,
@@ -27,52 +25,74 @@ const search = normalize(`${title} ${tag ?? ""}`);
 const external = post.data.external === true;
 ---
 
-<a
-  href={href}
-  class:list={["post-row", `post-row--${variant}`]}
+{/*
+  La fila tiene dos hijos: el enlace (que es la fila entera, con su rejilla) y
+  la previsualización del fragmento, que va FUERA del enlace.
+
+  Así el contenido del enlace es solo texto y el nombre accesible es
+  exactamente el título del post: el código no aporta nada al enlace, ni al
+  nombre accesible ni al árbol de accesibilidad. El contenedor es el que
+  posiciona la previsualización, que es decorativa (`aria-hidden`).
+*/}
+<div
+  class:list={["post-row-wrap", `post-row-wrap--${variant}`]}
   data-filter-item
   data-tag={tag ?? ""}
   data-search={search}
   data-year={date.getFullYear()}
-  target={external ? "_blank" : undefined}
-  rel={external ? "noopener noreferrer" : undefined}
   hidden={hidden}
 >
-  {number && <span class="post-row__number">{number}</span>}
+  <a
+    href={href}
+    class:list={["post-row", `post-row--${variant}`]}
+    target={external ? "_blank" : undefined}
+    rel={external ? "noopener noreferrer" : undefined}
+  >
+    {number && (
+      <span class="post-row__number" aria-hidden="true">
+        {number}
+      </span>
+    )}
 
-  <span class="post-row__title">
-    {title}
-    {external && <span class="post-row__external" aria-hidden="true">↗</span>}
-  </span>
+    <span class="post-row__title">
+      {title}
+      {external && <span class="post-row__external" aria-hidden="true">↗</span>}
+    </span>
 
-  {
-    variant === "related" ? (
-      <span class="post-row__aside post-row__aside--related">
+    {variant === "related" ? (
+      <span class="post-row__aside post-row__aside--related" aria-hidden="true">
         {formatted} <span aria-hidden="true">→</span>
       </span>
     ) : (
-      <span class="post-row__aside">
+      <span class="post-row__aside" aria-hidden="true">
         {tag && <span class="post-row__tag">#{tag}</span>}
         <span class="post-row__date">
           {formatted}
-          {variant === "list" && <span class="post-row__read"> · {readingTime} min</span>}
+          {variant === "list" && (
+            <span class="post-row__read"> · {readingTime} min</span>
+          )}
         </span>
       </span>
-    )
-  }
+    )}
+  </a>
 
-  {
-    variant !== "related" && (
-      <div class="post-row__peek" aria-hidden="true">
-        <Snippet snippet={resolveSnippet(post)} size="sm" />
-      </div>
-    )
-  }
-</a>
+  {variant !== "related" && (
+    <div class="post-row__peek" aria-hidden="true">
+      <Snippet snippet={resolveSnippet(post)} size="sm" />
+    </div>
+  )}
+</div>
 
 <style>
-  .post-row {
+  /*
+    Contenedor de la fila: sostiene la previsualización, que es hermana del
+    enlace y no forma parte de él.
+  */
+  .post-row-wrap {
     position: relative;
+  }
+
+  .post-row {
     display: grid;
     align-items: center;
     gap: 20px;
@@ -212,8 +232,9 @@ const external = post.data.external === true;
   }
 
   @media (hover: hover) and (min-width: 900px) {
-    .post-row:hover .post-row__peek,
-    .post-row:focus-visible .post-row__peek {
+    /* Al pasar el ratón por la fila (o al enfocarla) sale la previsualización. */
+    .post-row-wrap:hover .post-row__peek,
+    .post-row:focus-visible ~ .post-row__peek {
       display: block;
       position: absolute;
       right: 18%;
@@ -225,7 +246,7 @@ const external = post.data.external === true;
       z-index: 3;
     }
 
-    .post-row--list .post-row__peek {
+    .post-row-wrap--list .post-row__peek {
       right: 20%;
     }
   }

@@ -1,30 +1,64 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Snippet from "../Snippet.astro";
-import { postSlug, resolveSnippet } from "../../lib/content-utils";
+import {
+  postHref,
+  postSlug,
+  resolveSnippet,
+  urlHost,
+} from "../../lib/content-utils";
 
 export interface Props {
-  post: CollectionEntry<"blog">;
+  /** El post destacado. Opcional: sin posts, el componente no pinta nada. */
+  post?: CollectionEntry<"blog">;
 }
 
 const { post } = Astro.props;
-const slug = postSlug(post);
+
+// Un post externo vive en otra web: su enlace es su url y no tiene
+// descripción (esa solo existe en la rama interna del esquema).
+const href = post ? postHref(post) : "";
+const snippet = post ? resolveSnippet(post) : null;
+const external = post?.data.external === true;
+
+// La descripción solo existe en la rama interna del esquema, y la etiqueta
+// tiene que ser coherente con el enlace real: `cat <slug>.md` solo tiene
+// sentido para un post interno; uno externo abre otra web.
+let description: string | undefined;
+let file = "";
+if (post) {
+  if (post.data.external === true) {
+    file = `open ${urlHost(post.data.url)} →`;
+  } else {
+    description = post.data.description;
+    file = `cat ${postSlug(post)}.md →`;
+  }
+}
 ---
 
-<a class="featured" href={`/blog/${slug}`}>
-  <span class="featured__text">
-    <span class="featured__label">// destacado</span>
-    <span class="featured__title">{post.data.title}</span>
-    {post.data.description && (
-      <span class="featured__desc">{post.data.description}</span>
-    )}
-    <span class="featured__file">cat {slug}.md →</span>
-  </span>
+{
+  post && snippet && (
+    <a
+      class="featured"
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+    >
+      <span class="featured__text">
+        <span class="featured__label">// destacado</span>
+        <span class="featured__title">{post.data.title}</span>
+        {description && (
+          <span class="featured__desc">{description}</span>
+        )}
+        <span class="featured__file">{file}</span>
+      </span>
 
-  <div class="featured__snippet">
-    <Snippet snippet={resolveSnippet(post)} size="md" />
-  </div>
-</a>
+      <div class="featured__snippet">
+        <Snippet snippet={snippet} size="md" />
+      </div>
+    </a>
+  )
+}
 
 <style>
   .featured {

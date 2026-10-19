@@ -9,12 +9,11 @@ const posts = await getPublishedPosts();
 const last = posts.slice(0, 3);
 ---
 
-<PageLayout promptPath="~/??" pagePath="/404">
+<PageLayout promptPath="~/??">
   <PageMeta
     title={`404 | ${SITE_TITLE}`}
     description="Esta página no existe."
     slot="meta"
-    pagePath="/404"
   />
   <meta name="robots" content="noindex" slot="meta" />
 

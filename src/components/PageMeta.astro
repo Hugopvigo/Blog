@@ -10,6 +10,10 @@ import {
 export interface Props {
   title?: string;
   description?: string;
+  /**
+   * Ruta de la página (p. ej. "/blog"). Si no se pasa, la página no tiene
+   * URL propia (caso de la 404) y no se emiten ni `canonical` ni `og:url`.
+   */
   pagePath?: string;
 }
 
@@ -27,6 +31,9 @@ const { meta, og, twitter } = getPageMeta({
   siteOwnerTwitterHandle: TWITTER_HANDLE,
   contentAuthorTwitterHandle: TWITTER_HANDLE,
 });
+
+// `og:url` es la URL de la página: sin canonical no hay URL que anunciar.
+const ogUrl = meta.canonicalUrl;
 ---
 
 <!-- Primary Meta Tags -->
@@ -40,7 +47,7 @@ const { meta, og, twitter } = getPageMeta({
 {og.description && <meta property="og:description" content={og.description} />}
 {og.type && <meta property="og:type" content={og.type} />}
 <meta property="og:site_name" content={SITE_TITLE} />
-{og.url && <meta property="og:url" content={og.url} />}
+{ogUrl && <meta property="og:url" content={ogUrl} />}
 {og.image && <meta property="og:image" content={og.image} />}
 {og.imageAlt && <meta property="og:image:alt" content={og.imageAlt} />}
 {og.imageWidth && <meta property="og:image:width" content={og.imageWidth} />}
