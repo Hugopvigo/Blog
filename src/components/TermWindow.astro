@@ -4,6 +4,8 @@ export interface Props {
   variant?: "code" | "surface";
   size?: "sm" | "md" | "lg";
   class?: string;
+  /** Muestra el botón de copiar en la barra (solo bloques de código). */
+  copy?: boolean;
 }
 
 const {
@@ -11,6 +13,7 @@ const {
   variant = "code",
   size = "md",
   class: className,
+  copy = false,
   ...rest
 } = Astro.props;
 ---
@@ -30,6 +33,13 @@ const {
       ><i class="dot dot--green"></i>
     </span>
     <span class="term-window__title">{title}</span>
+    {
+      copy && (
+        <button type="button" class="term-window__copy" data-copy-code>
+          copiar
+        </button>
+      )
+    }
   </div>
   <div class="term-window__body">
     <slot />
@@ -112,4 +122,51 @@ const {
   .term-window--sm .term-window__title {
     font-size: 11px;
   }
+
+  .term-window__copy {
+    margin-left: auto;
+    font: inherit;
+    font-size: 11px;
+    color: var(--code-title-aa);
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .term-window__copy:hover {
+    color: var(--code-fg);
+  }
 </style>
+
+<script>
+  function initCopyCode() {
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-copy-code]")
+      .forEach((btn) => {
+        if (btn.dataset.copyBound) return;
+        btn.dataset.copyBound = "1";
+
+        let timer: ReturnType<typeof setTimeout> | null = null;
+
+        btn.addEventListener("click", async () => {
+          const window = btn.closest(".term-window");
+          const code = window?.querySelector("code");
+          if (!code) return;
+          try {
+            await navigator.clipboard.writeText(code.textContent ?? "");
+            btn.textContent = "✓ copiado";
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(() => {
+              btn.textContent = "copiar";
+            }, 1600);
+          } catch (e) {
+            /* sin permiso de portapapeles: no se cambia la etiqueta. */
+          }
+        });
+      });
+  }
+
+  document.addEventListener("astro:page-load", initCopyCode);
+</script>

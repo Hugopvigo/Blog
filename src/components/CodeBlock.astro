@@ -5,7 +5,7 @@ import TermWindow from "./TermWindow.astro";
 const { language, content } = Astro.props;
 ---
 
-<TermWindow title={language || "txt"} variant="code" size="lg">
+<TermWindow title={language || "txt"} variant="code" size="lg" copy>
   <div class="term-code code-block">
     {
       language ? (
