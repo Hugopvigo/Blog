@@ -1,3 +1,7 @@
+<meta property="og:title" content="BLOG">
+<meta property="og:description" content="El blog y el portfolio de Hugo Pérez Vigo, con estética de terminal.">
+<meta property="og:image" content="https://raw.githubusercontent.com/Hugopvigo/Blog/main/docs/capturas/og.png">
+
 <p align="center">
   <img src="docs/capturas/00-cabecera.png" alt="Blog de Hugo Pérez Vigo — artículos y proyectos" width="100%">
 </p>
