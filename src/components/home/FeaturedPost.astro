@@ -54,7 +54,7 @@ if (post) {
       </span>
 
       <div class="featured__snippet">
-        <Snippet snippet={snippet} size="md" />
+        <Snippet snippet={snippet} size="lg" />
       </div>
     </a>
   )
@@ -108,9 +108,18 @@ if (post) {
     font-weight: 700;
   }
 
+  /* min-width: 0 deja que el fragmento (white-space: pre) se desplace dentro
+     de su ventana en vez de ensanchar la tarjeta. */
   .featured__snippet {
     display: block;
-    transform: rotate(1.5deg);
+    min-width: 0;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Girada solo donde hay sitio: en móvil la rotación recorta el código. */
+  @media (min-width: 900px) {
+    .featured__snippet {
+      transform: rotate(1.5deg);
+    }
   }
 </style>

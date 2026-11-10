@@ -32,13 +32,22 @@ const isActive = (href: string) =>
   .nav-links {
     display: flex;
     gap: 20px;
-    flex-wrap: wrap;
     align-items: center;
     margin: 0;
     padding: 0;
   }
 
+  @media (max-width: 620px) {
+    .nav-links {
+      gap: 14px;
+    }
+  }
+
+  /* Objetivo táctil de 40 px de alto. */
   .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
     text-decoration: none;
     transition: color 0.2s;
   }

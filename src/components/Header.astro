@@ -21,9 +21,10 @@ const { promptPath, progress } = Astro.props;
     </div>
 
     <a class="prompt-logo" href="/">
-      <span class="logo-user">hugo</span><span class="logo-at">@</span
-      ><span class="logo-name">perez-vigo</span
-      ><span class="logo-path">:{promptPath}$</span>
+      <span class="logo-user">hugo</span><span class="logo-full"
+        ><span class="logo-at">@</span><span class="logo-name">perez-vigo</span
+        ><span class="logo-path">:{promptPath}</span></span
+      ><span class="logo-end">$</span>
     </a>
 
     <div class="nav-group">
@@ -70,7 +71,7 @@ const { promptPath, progress } = Astro.props;
   }
 
   .site-nav {
-    padding-block: 14px;
+    padding-block: 8px;
     display: flex;
     align-items: center;
     gap: 24px;
@@ -111,6 +112,9 @@ const { promptPath, progress } = Astro.props;
     margin-right: auto;
     text-decoration: none;
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
   }
 
   .logo-user {
@@ -125,14 +129,48 @@ const { promptPath, progress } = Astro.props;
     color: var(--a);
   }
 
-  .logo-path {
+  .logo-path,
+  .logo-end {
     color: var(--mut);
+  }
+
+  /*
+    En pantallas estrechas la cabecera cabe en una sola fila: del prompt
+    queda «hugo$» (y por debajo de 400 px, nada: «./inicio» ya lleva a casa).
+  */
+  @media (max-width: 620px) {
+    .site-nav {
+      flex-wrap: nowrap;
+      gap: 12px;
+    }
+
+    .logo-full {
+      display: none;
+    }
+
+    .nav-group {
+      gap: 12px;
+    }
+  }
+
+  /* Con 375 px útiles, «./inicio» sobra: el logo ya lleva a la portada. */
+  @media (max-width: 400px) {
+    .site-nav {
+      gap: 10px;
+    }
+
+    .nav-group {
+      gap: 10px;
+    }
+
+    .nav-group :global(.nav-links li:first-child) {
+      display: none;
+    }
   }
 
   .nav-group {
     display: flex;
     gap: 20px;
-    flex-wrap: wrap;
     align-items: center;
   }
 

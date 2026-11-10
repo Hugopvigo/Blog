@@ -131,7 +131,7 @@ const shot =
 
   .project-card__host {
     margin-left: 6px;
-    font-size: 11px;
+    font-size: 12px;
     color: var(--mut);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -160,7 +160,7 @@ const shot =
     justify-content: center;
     gap: 6px;
     background: var(--bg);
-    font-size: 13px;
+    font-size: 14px;
     color: var(--mut);
   }
 
@@ -169,6 +169,7 @@ const shot =
   }
 
   .project-card__body {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -179,7 +180,7 @@ const shot =
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1.25;
@@ -190,18 +191,20 @@ const shot =
   }
 
   .project-card__desc {
-    font-size: 14px;
+    font-size: 15px;
+    line-height: 1.5;
     color: var(--mut);
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
   .project-card__meta {
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--mut);
   }
 

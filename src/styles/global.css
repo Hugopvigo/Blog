@@ -16,7 +16,7 @@
   --fg: #0e1214;
   --mut: #4f5d5a;
   --a: #0f7a62;
-  --b: #8a5a00;
+  --b: #a34e03;
   --inv: #eef2ef;
 
   /* Las ventanas de código son siempre oscuras, con cualquier tema. */
@@ -276,11 +276,23 @@
   font-size: 19px;
   line-height: 1.75;
   color: var(--fg);
-  text-wrap: pretty;
-  /* Las imágenes se salen de la columna de 720 px. */
+  /* `pretty` acortaba renglones a mitad de párrafo para no dejar una última
+     línea corta; con la columna de 620 px es mejor el reparto normal. */
+  text-wrap: wrap;
+  /* Sin índice lateral (<1120 px), las imágenes se salen de la columna. */
   --figure-width: min(1040px, calc(100vw - 2 * clamp(20px, 4vw, 40px)));
   --figure-margin-left: 50%;
   --figure-transform: translateX(-50%);
+}
+
+/* Con el índice en su columna (≥1120 px) las figuras no pueden salirse de la
+   columna de lectura: taparían el índice. */
+@media (min-width: 1120px) {
+  .prose.article-body {
+    --figure-width: auto;
+    --figure-margin-left: 0;
+    --figure-transform: none;
+  }
 }
 
 .article-body p {
@@ -307,7 +319,7 @@
   font-size: clamp(26px, 3vw, 34px);
   line-height: 1.15;
   letter-spacing: -0.04em;
-  margin: 16px 0 0;
+  margin: 56px 0 16px;
   color: var(--fg);
 }
 
@@ -317,7 +329,7 @@
   font-size: 22px;
   line-height: 1.2;
   letter-spacing: -0.04em;
-  margin: 16px 0 0;
+  margin: 40px 0 12px;
   color: var(--fg);
 }
 
@@ -328,13 +340,25 @@
   font-weight: 700;
   font-size: 19px;
   line-height: 1.3;
-  margin: 16px 0 0;
+  margin: 32px 0 8px;
   color: var(--fg);
 }
 
 .article-body strong {
   color: var(--b);
   font-weight: 700;
+}
+
+/* El primer elemento del cuerpo no suma margen superior (el contenido de
+   Markdoc va dentro de un <article>). */
+.article-body > article > :first-child {
+  margin-top: 0;
+}
+
+/* Los bloques de código del artículo (ventana de terminal) respiran como un
+   párrafo: sin esto, el texto siguiente quedaba pegado a la ventana. */
+.article-body .term-window {
+  margin: 0 0 24px;
 }
 
 .article-body em {
@@ -360,6 +384,12 @@
   background: var(--bg2);
   border: 1px solid var(--line);
   color: var(--fg);
+}
+
+/* Typography envuelve el código en línea en acentos graves literales. */
+.article-body code::before,
+.article-body code::after {
+  content: none;
 }
 
 .article-body blockquote {
@@ -407,6 +437,15 @@
 .article-body table {
   font-size: 0.9em;
   width: 100%;
+}
+
+/* En móvil una tabla ancha se desplaza dentro de sí misma en vez de
+   ensanchar la página. */
+@media (max-width: 720px) {
+  .article-body table {
+    display: block;
+    overflow-x: auto;
+  }
 }
 
 .article-body th,

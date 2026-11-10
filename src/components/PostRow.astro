@@ -66,12 +66,8 @@ const external = post.data.external === true;
     ) : (
       <span class="post-row__aside" aria-hidden="true">
         {tag && <span class="post-row__tag">#{tag}</span>}
-        <span class="post-row__date">
-          {formatted}
-          {variant === "list" && (
-            <span class="post-row__read"> · {readingTime} min</span>
-          )}
-        </span>
+        <span>{formatted}</span>
+        <span>{readingTime} min</span>
       </span>
     )}
   </a>
@@ -94,47 +90,52 @@ const external = post.data.external === true;
 
   .post-row {
     display: grid;
-    align-items: center;
-    gap: 20px;
+    align-items: baseline;
+    column-gap: 20px;
+    row-gap: 8px;
     text-decoration: none;
     color: var(--fg);
     transition: background 0.2s, color 0.2s;
   }
 
+  /* Título arriba y, debajo, una sola línea con etiqueta · fecha · lectura. */
   .post-row--home {
-    grid-template-columns: 48px minmax(0, 1fr) auto;
+    grid-template-columns: 48px minmax(0, 1fr);
     padding: clamp(18px, 2.4vw, 28px) clamp(20px, 4vw, 40px);
   }
 
   .post-row--list {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     padding: clamp(18px, 2.4vw, 26px) clamp(20px, 4vw, 40px);
   }
 
   .post-row--related {
     grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
     padding: clamp(18px, 2.4vw, 26px) clamp(20px, 4vw, 40px);
   }
 
   .post-row__number {
+    grid-row: 1 / span 2;
     font-size: 14px;
+    color: var(--mut);
   }
 
   .post-row__title {
     font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.04em;
-    text-wrap: pretty;
+    text-wrap: balance;
   }
 
   .post-row--home .post-row__title {
     font-size: clamp(20px, 2.6vw, 34px);
-    max-width: 26ch;
+    max-width: 46ch;
   }
 
   .post-row--list .post-row__title {
     font-size: clamp(20px, 2.4vw, 30px);
-    max-width: 30ch;
+    max-width: 48ch;
   }
 
   .post-row--related .post-row__title {
@@ -146,73 +147,29 @@ const external = post.data.external === true;
   }
 
   .post-row__aside {
-    font-size: 13px;
-    text-align: right;
+    font-size: 14px;
+    color: var(--mut);
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+
+  .post-row__aside > span:not(:first-child)::before {
+    content: "· ";
   }
 
   .post-row__aside--related {
-    flex-direction: row;
     gap: 8px;
-    color: var(--mut);
   }
 
   .post-row__tag {
     color: var(--fg);
-  }
-
-  .post-row__date {
-    opacity: 0.7;
-  }
-
-  .post-row__read {
-    opacity: 1;
+    font-weight: 700;
   }
 
   /* La previsualización solo existe con ratón y pantalla ancha. */
   .post-row__peek {
     display: none;
-  }
-
-  /*
-    En móvil la fila se apila: el título a todo el ancho y los metadatos
-    debajo. Con las tres columnas en paralelo el título se parte en cinco
-    líneas y la fecha se sale de la pantalla.
-  */
-  @media (max-width: 620px) {
-    .post-row--home {
-      grid-template-columns: 48px minmax(0, 1fr);
-      row-gap: 4px;
-    }
-
-    .post-row--list,
-    .post-row--related {
-      grid-template-columns: minmax(0, 1fr);
-      row-gap: 4px;
-    }
-
-    .post-row--home .post-row__aside,
-    .post-row--list .post-row__aside,
-    .post-row--related .post-row__aside {
-      grid-column: 2;
-      text-align: left;
-      flex-direction: row;
-      gap: 12px;
-      align-items: baseline;
-    }
-
-    .post-row--list .post-row__aside,
-    .post-row--related .post-row__aside {
-      grid-column: 1;
-    }
-
-    .post-row--home .post-row__title,
-    .post-row--list .post-row__title,
-    .post-row--related .post-row__title {
-      max-width: none;
-    }
   }
 
   .post-row:hover,
@@ -226,28 +183,61 @@ const external = post.data.external === true;
     outline-offset: 2px;
   }
 
+  .post-row:hover .post-row__aside,
+  .post-row:focus-visible .post-row__aside,
   .post-row:hover .post-row__tag,
-  .post-row:focus-visible .post-row__tag {
+  .post-row:focus-visible .post-row__tag,
+  .post-row:hover .post-row__number,
+  .post-row:focus-visible .post-row__number {
     color: var(--inv);
   }
 
+  /* Sobre el fondo de acento la flecha del enlace externo no se vería. */
+  .post-row:hover .post-row__external,
+  .post-row:focus-visible .post-row__external {
+    color: var(--inv);
+  }
+
+  /* Estas filas llevan los metadatos DEBAJO del título, en la columna del
+     título (la del número, en la portada, queda libre a su izquierda). */
+  .post-row--home .post-row__aside {
+    grid-column: 2;
+  }
+
+  @media (max-width: 620px) {
+    .post-row--related {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 4px;
+    }
+
+    .post-row--home .post-row__title,
+    .post-row--list .post-row__title {
+      max-width: none;
+    }
+  }
+
   @media (hover: hover) and (min-width: 900px) {
-    /* Al pasar el ratón por la fila (o al enfocarla) sale la previsualización. */
+    /*
+      Al pasar el ratón por la fila (o al enfocarla) sale la previsualización,
+      pegada al borde derecho; el título deja libre esa franja (380 px del
+      fragmento + el margen) para que no lo tape.
+    */
+    .post-row--home .post-row__title,
+    .post-row--list .post-row__title {
+      max-width: min(48ch, calc(100% - 440px));
+    }
+
     .post-row-wrap:hover .post-row__peek,
     .post-row:focus-visible ~ .post-row__peek {
       display: block;
       position: absolute;
-      right: 18%;
+      right: clamp(20px, 4vw, 40px);
       top: 50%;
-      width: 360px;
-      transform: translateY(-50%) rotate(4deg);
+      width: 380px;
+      transform: translateY(-50%) rotate(3deg);
       box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
       pointer-events: none;
       z-index: 3;
-    }
-
-    .post-row-wrap--list .post-row__peek {
-      right: 20%;
     }
   }
 </style>

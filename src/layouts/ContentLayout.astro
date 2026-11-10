@@ -51,7 +51,6 @@ const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
             )
           }
           <span>{formatted}</span>
-          <span aria-hidden="true">·</span>
           <span>{readingTime} min de lectura</span>
         </div>
 
@@ -66,28 +65,34 @@ const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
         <Snippet snippet={resolveSnippet(entry)} size="lg" />
       </div>
 
-      <div class="post__body prose article-body">
-        <TableOfContents headings={headings} inline />
-        <slot name="content" />
-      </div>
+      <div class="post__layout">
+        <div class="post__col">
+          <div class="post__body prose article-body">
+            <TableOfContents headings={headings} inline />
+            <slot name="content" />
+          </div>
 
-      <footer class="post__foot">
-        <span>— Hugo Perez-Vigo</span>
-        <div class="post__actions">
-          <a
-            href={tweetUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="post__action">compartir en twitter</a
-          >
-          <button
-            type="button"
-            class="post__action post__copy"
-            data-copy-link
-            data-url={canonical}>copiar enlace</button
-          >
+          <footer class="post__foot">
+            <span>— Hugo Perez-Vigo</span>
+            <div class="post__actions">
+              <a
+                href={tweetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="post__action">compartir en twitter</a
+              >
+              <button
+                type="button"
+                class="post__action post__copy"
+                data-copy-link
+                data-url={canonical}>copiar enlace</button
+              >
+            </div>
+          </footer>
         </div>
-      </footer>
+
+        <TableOfContents headings={headings} />
+      </div>
     </article>
 
     <section class="more">
@@ -102,7 +107,6 @@ const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
     </section>
   </Fragment>
 
-  <TableOfContents headings={headings} slot="fixed" />
   <BackToTop slot="fixed" />
 </PageLayout>
 
@@ -110,11 +114,11 @@ const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
   .post__head {
     max-width: 1040px;
     margin: 0 auto;
-    padding: clamp(40px, 7vw, 88px) clamp(20px, 4vw, 40px)
-      clamp(32px, 5vw, 56px);
+    padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px)
+      clamp(24px, 4vw, 40px);
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
   }
 
   .post__back {
@@ -154,9 +158,9 @@ const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
   .post__title {
     margin: 0;
     font-weight: 800;
-    font-size: clamp(40px, 6.4vw, 88px);
-    line-height: 1;
-    letter-spacing: -0.055em;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.05em;
     text-wrap: balance;
   }
 
@@ -166,7 +170,7 @@ const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
 
   .post__lead {
     margin: 0;
-    max-width: 40ch;
+    max-width: 52ch;
     font-family: var(--font-sans);
     font-size: clamp(20px, 2vw, 24px);
     line-height: 1.45;
@@ -180,16 +184,31 @@ const tweetUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
     padding: 0 clamp(20px, 4vw, 40px);
   }
 
-  .post__body {
-    max-width: 720px;
+  /*
+    Columna de lectura (620 px de texto: unos 72 caracteres a 19 px) y, desde
+    1120 px, el índice al lado en su propia columna. En pantallas más
+    estrechas el índice es el desplegable del principio.
+  */
+  .post__layout {
+    --gutter: clamp(20px, 4vw, 40px);
+    max-width: calc(620px + 2 * var(--gutter));
     margin: 0 auto;
-    padding: clamp(40px, 6vw, 72px) clamp(20px, 4vw, 40px) 0;
+    padding: clamp(32px, 5vw, 56px) var(--gutter) 0;
+  }
+
+  @media (min-width: 1120px) {
+    .post__layout {
+      max-width: none;
+      display: grid;
+      grid-template-columns: minmax(0, 620px) 284px;
+      column-gap: 56px;
+      justify-content: center;
+    }
   }
 
   .post__foot {
-    max-width: 720px;
-    margin: clamp(48px, 7vw, 80px) auto 0;
-    padding: 24px clamp(20px, 4vw, 40px) 0;
+    margin: clamp(48px, 7vw, 80px) 0 0;
+    padding: 24px 0 0;
     display: flex;
     justify-content: space-between;
     gap: 16px;
